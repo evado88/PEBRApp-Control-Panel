@@ -8,7 +8,7 @@ export { default as EventsPage } from './events/events';
 export { default as AppointmentsPage } from './appointments/appointments';
 export { default as FollowupsPage } from './followups/followups';
 export { default as AnalyticsPage } from './analytics/analytics';
-
+export { default as ClientsPage } from './clients/clients';
 
 
 

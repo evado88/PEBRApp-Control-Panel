@@ -1,11 +1,17 @@
 import { withNavigationWatcher } from './contexts/navigation';
-import { HomePage, TasksPage, UsersPage, ProfilePage, AnalyticsPage,
-   EventsPage, AppointmentsPage, FollowupsPage, MedicationRefillsPage, PatientsPage } from './pages';
+import {
+  HomePage, TasksPage, UsersPage, ClientsPage, ProfilePage, AnalyticsPage,
+  EventsPage, AppointmentsPage, FollowupsPage, MedicationRefillsPage, PatientsPage
+} from './pages';
 
 const routes = [
   {
     path: '/users',
     component: UsersPage
+  },
+  {
+    path: '/clients',
+    component: ClientsPage
   },
   {
     path: '/patients',

@@ -21,6 +21,10 @@ export const navigation = [
         path: '/users'
       },
       {
+        text: 'Clients',
+        path: '/clients'
+      },
+      {
         text: 'Patients',
         path: '/patients'
       },

@@ -12,7 +12,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 import appInfo from '../../app-info';
 
-const Analytics = () => {
+const Clients = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
@@ -20,8 +20,8 @@ const Analytics = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'get-user-data/patients';
-  const title = 'Participants';
+  const currentUrl = 'get-user-data/users';
+  const title = 'Clients';
 
   function showMessage(msg) {
 
@@ -117,46 +117,41 @@ const Analytics = () => {
           hidingPriority={8}
         />
         <Column
-          dataField={'studyNo'}
-          caption={'Study No'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'enrollDate'}
-          caption={'Enroll Date'}
+          dataField={'createDate'}
+          caption={'Create Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
+        <Column
+          dataField={'firstName'}
+          caption={'First Name'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'lastName'}
+          caption={'Last Name'}
+          hidingPriority={6}
+        />
 
         <Column
-          dataField={'gender'}
-          caption={'Gender'}
-          hidingPriority={6}
-        />
-        <Column
           dataField={'phoneNumber'}
-          caption={'Phone'}
+          caption={'Occured'}
           hidingPriority={6}
         />
         <Column
-          dataField={'supportType'}
-          caption={'Support Type'}
-          hidingPriority={5}
+          dataField={'healthCenterDescription'}
+          caption={'Health Center'}
+          hidingPriority={6}
         />
         <Column
-          dataField={'contraceptionMethod'}
-          caption={'Contraception Method'}
-          hidingPriority={5}
-        />
-           <Column
-          dataField={'srhServicePreffered'}
-          caption={'SRH Service Preffered'}
-          hidingPriority={5}
+          dataField={'isActive'}
+          caption={'Active'}
+          hidingPriority={6}
         />
       </DataGrid>
     </React.Fragment>
   )
 };
 
-export default Analytics;
+export default Clients;
