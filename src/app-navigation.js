@@ -29,16 +29,8 @@ export const navigation = [
         path: '/patients'
       },
       {
-        text: 'Medication Refills',
-        path: '/medication-refills'
-      },
-      {
         text: 'Events',
         path: '/events'
-      },
-      {
-        text: 'Appointments',
-        path: '/appointments'
       },
       {
         text: 'Followups',
@@ -47,6 +39,28 @@ export const navigation = [
       {
         text: 'Usage Analytics',
         path: '/analytics'
+      },
+      {
+        text: 'Facilities',
+        path: '/facilities'
+      },
+      {
+        text: 'Resources',
+        path: '/resources'
+      },
+      {
+        text: 'Countries',
+        path: '/countries'
+      }
+      ,
+      {
+        text: 'Colors',
+        path: '/colors'
+      }
+      ,
+      {
+        text: 'Discussions',
+        path: '/discussions'
       }
     ]
   }

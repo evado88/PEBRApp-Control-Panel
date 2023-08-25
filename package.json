@@ -9,6 +9,7 @@
     "axios": "^1.4.0",
     "devextreme": "^20.2.4",
     "devextreme-react": "20.2.3",
+    "firebase": "^10.3.0",
     "node-sass": "^4.11.0",
     "react": "^16.2.0",
     "react-app-polyfill": "^1.0.0",

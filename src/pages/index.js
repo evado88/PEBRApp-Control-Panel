@@ -9,6 +9,8 @@ export { default as AppointmentsPage } from './appointments/appointments';
 export { default as FollowupsPage } from './followups/followups';
 export { default as AnalyticsPage } from './analytics/analytics';
 export { default as ClientsPage } from './clients/clients';
-
-
-
+export { default as FacilitiesPage } from './facilities/facilities';
+export { default as ResourcesPage } from './resources/resources';
+export { default as CountriesPage } from './countries/countries';
+export { default as ColorsPage } from './colors/colors';
+export { default as DiscussionsPage } from './discussions/discussions';

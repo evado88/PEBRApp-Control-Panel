@@ -14,7 +14,7 @@ import { useAuth } from '../../contexts/auth';
 
 import './login-form.scss';
 
- function Login() {
+function Login() {
   //const history = useHistory();
   const { signIn } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,8 @@ import './login-form.scss';
     setLoading(true);
 
     const result = await signIn(email, password);
-    if (!result.isOk) {
+
+    if (result !== undefined && !result.isOk) {
       setLoading(false);
       notify(result.message, 'error', 2000);
     }
@@ -39,7 +40,11 @@ import './login-form.scss';
 
   return (
     <form className={'login-form'} onSubmit={onSubmit}>
+      <div style={{ marginLeft: 'auto', marginRight: 'auto', textAlign:'center',marginBottom:'20px' }}>
+        <img src='twyshe.png' style={{ width: '120px', height: 'auto' }} alt='Twyshe Logo' />
+      </div>
       <Form formData={formData.current} disabled={loading}>
+
         <Item
           dataField={'email'}
           editorType={'dxTextBox'}

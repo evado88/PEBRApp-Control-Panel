@@ -12,7 +12,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 import appInfo from '../../app-info';
 
-const Analytics = () => {
+const Colors = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
@@ -20,7 +20,8 @@ const Analytics = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'get-user-data/analytics';
+  const currentUrl = 'color/list';
+  const title = 'Colors';
 
   function showMessage(msg) {
 
@@ -83,7 +84,7 @@ const Analytics = () => {
 
   return (
     <React.Fragment>
-      <h2 className={'content-block'}>Analytics</h2>
+      <h2 className={'content-block'}>{title}</h2>
       <Toast
         visible={error}
         message={message}
@@ -93,7 +94,7 @@ const Analytics = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'itemId'}
+        keyExpr={'color_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -106,52 +107,36 @@ const Analytics = () => {
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <Column
-          dataField={'itemId'}
+          dataField={'color_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'username'}   
-          caption={'Username'}
+          dataField={'color_name'}
+          caption={'Name'}
           hidingPriority={8}
         />
         <Column
-          dataField={'description'}
-          caption={'Description'}
+          dataField={'color_code'}
+          caption={'Code'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'color_lastupdateuser'}
+          caption={'User'}
           hidingPriority={6}
         />
         <Column
-          dataField={'startDate'}
-          caption={'Start Date'}
+          dataField={'color_createdate'}
+          caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
-        <Column
-          dataField={'endDate'}
-          caption={'End Date'}
-          dataType={'date'}
-          format={'dd MMMM yyy'}
-          hidingPriority={5}
-        />
-        <Column
-          dataField={'duration'}
-          caption={'Duration (Seconds)'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'result'}
-          caption={'Result'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'subject'}
-          caption={'Subject'}
-          hidingPriority={6}
-        />
+
       </DataGrid>
     </React.Fragment>
   )
 };
 
-export default Analytics;
+export default Colors;

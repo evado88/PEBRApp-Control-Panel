@@ -20,7 +20,7 @@ export default function Content() {
         <Redirect to={'/home'} />
       </Switch>
       <Footer>
-      Copyright © 2022-{new Date().getFullYear()} {appInfo.title}. All rights reserved.
+      Copyright © 2022-{new Date().getFullYear()}. All rights reserved.
       </Footer>
     </SideNavBarLayout>
   );

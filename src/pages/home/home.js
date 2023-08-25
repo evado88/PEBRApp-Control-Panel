@@ -15,10 +15,10 @@ const Home = () => {
       <div className={'content-block'}>
         <div className={'dx-card responsive-paddings'}>
           <div className={'logos-container'}>
-            <img src='../R21-192x192.png' alt='R21App Logo' />
+            <img src='../twyshe.png' alt='Twyshe Logo' style={{ width: '256px', height: 'auto' }} />
           </div>
 
-          <p>Welcome to the control panel for the R21-PEBRApp!</p>
+          <p>Welcome to the control panel for Twyshe!</p>
           <p>You can use this application to perform the following functions: </p>
           <ul>
             <li><strong>Peer Navigators</strong> -  See the total number of peer navigators registered and their details</li>

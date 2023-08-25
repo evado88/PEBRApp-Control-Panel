@@ -1,28 +1,100 @@
 
+//import appInfo from '../app-info';
+//import axios from "axios";
+
 export async function signIn(useremail, userpassword) {
-  try {
-    // Send request
-    console.log("Logging", useremail, userpassword);
 
-    if (userpassword === '123456' && useremail === 'support@r21app.online') {
+  // Send request
+  console.log("Logging", useremail, userpassword);
 
-      const ruser = {
-        email: useremail,
-        avatarUrl: 'https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/employees/06.png'
-      }
+  if (useremail === 'nkoleevans@hotmail.com' ||
+    useremail === 'karen.hampanda@cuanschutz.edu' ||
+    useremail === 'alain.amstutz@unibas.ch' ||
+    useremail === 'madeleine.sehrt@cuanschutz.edu') {
 
-      window.sessionStorage.setItem('ruser', ruser);
+    if (userpassword === '1234') {
+
+      window.sessionStorage.setItem('ruser', useremail);
       
       return {
         isOk: true,
-        data: ruser
+        data: useremail
       };
+
     } else {
       return {
         isOk: false,
-        message: "Wrong username or password!"
+        message: "Invalid username or passowrd!"
       };
     }
+
+  } else {
+    return {
+      isOk: false,
+      message: "Invalid username or passowrd!"
+    };
+  }
+/*
+  console.log(new Date().toISOString(), "Starting to load data from server",
+    `${appInfo.apiUrl}`);
+
+  // invalid url will trigger an 404 error
+  try {
+    // Send request
+
+    axios({
+      method: 'post',
+      url: `${appInfo.apiUrl}${useremail}/${userpassword}`,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).then((response) => {
+
+      console.log(new Date().toISOString(), "Login response has completed from server", response);
+
+      if (typeof response.data == 'string') {
+
+        console.log("Unable to process server response from server");
+
+        return {
+          isOk: false,
+          message: "Unknown problem occured on server!"
+        };
+
+      } else {
+
+        if (response.data.succeeded) {
+
+          console.log('Success', response.data[0].user_username);
+
+          window.sessionStorage.setItem('ruser', useremail);
+
+          return {
+            isOk: true,
+            data: useremail
+          };
+
+        } else {
+
+          console.log('Failure', response.data.message);
+
+          return {
+            isOk: false,
+            message: response.data.message
+          };
+
+        }
+      }
+    }).catch(error => {
+
+      console.log(new Date().toISOString(), "An error occured from server", error, appInfo.apiUrl);
+
+      console.log('Error', error);
+
+      return {
+        isOk: false,
+        message: "Unknown error occured on server!"
+      };
+
+    });
   }
   catch {
     return {
@@ -30,6 +102,8 @@ export async function signIn(useremail, userpassword) {
       message: "Authentication failed"
     };
   }
+*/
+
 }
 
 export async function getUser() {

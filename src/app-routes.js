@@ -1,7 +1,8 @@
 import { withNavigationWatcher } from './contexts/navigation';
 import {
   HomePage, TasksPage, UsersPage, ClientsPage, ProfilePage, AnalyticsPage,
-  EventsPage, AppointmentsPage, FollowupsPage, MedicationRefillsPage, PatientsPage
+  EventsPage, AppointmentsPage, FollowupsPage, MedicationRefillsPage, PatientsPage, FacilitiesPage, ResourcesPage, 
+  CountriesPage, ColorsPage, DiscussionsPage
 } from './pages';
 
 const routes = [
@@ -44,6 +45,26 @@ const routes = [
   {
     path: '/profile',
     component: ProfilePage
+  },
+  {
+    path: '/facilities',
+    component: FacilitiesPage
+  },
+  {
+    path: '/resources',
+    component: ResourcesPage
+  },
+  {
+    path: '/countries',
+    component: CountriesPage
+  },
+  {
+    path: '/colors',
+    component: ColorsPage
+  },
+  {
+    path: '/discussions',
+    component: DiscussionsPage
   },
   {
     path: '/home',
