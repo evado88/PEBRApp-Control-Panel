@@ -10,18 +10,17 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+import appInfo from '../app-info';
 
-const Colors = () => {
-
+const Appointments = () => {
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Loading data...');
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'color/list';
-  const title = 'Colors';
+  const currentUrl = 'get-user-data/appointments';
+  const title = 'Appointments';
 
   function showMessage(msg) {
 
@@ -94,7 +93,7 @@ const Colors = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'color_id'}
+        keyExpr={'itemId'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -107,36 +106,53 @@ const Colors = () => {
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <Column
-          dataField={'color_id'}
+          dataField={'itemId'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'color_name'}
-          caption={'Name'}
+          dataField={'username'}
+          caption={'Username'}
           hidingPriority={8}
         />
         <Column
-          dataField={'color_code'}
-          caption={'Code'}
+          dataField={'studyNo'}
+          caption={'Study No'}
           hidingPriority={8}
         />
         <Column
-          dataField={'color_lastupdateuser'}
-          caption={'User'}
+          dataField={'description'}
+          caption={'Description'}
           hidingPriority={6}
         />
         <Column
-          dataField={'color_createdate'}
+          dataField={'date'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
 
+        <Column
+          dataField={'occured'}
+          caption={'Occured'}
+          hidingPriority={6}
+        />
+        <Column
+          dataField={'noOccurReason'}
+          caption={'Reason'}
+          hidingPriority={6}
+        />
+        <Column
+          dataField={'nextDate'}
+          caption={'Next Date'}
+          dataType={'date'}
+          format={'dd MMMM yyy'}
+          hidingPriority={5}
+        />
       </DataGrid>
     </React.Fragment>
   )
 };
 
-export default Colors;
+export default Appointments;

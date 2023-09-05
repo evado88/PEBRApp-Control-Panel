@@ -10,17 +10,18 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+import appInfo from '../app-info';
 
-const Appointments = () => {
+const Analytics = () => {
+
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Loading data...');
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'get-user-data/appointments';
-  const title = 'Appointments';
+  const currentUrl = 'get-user-data/patients';
+  const title = 'Participants';
 
   function showMessage(msg) {
 
@@ -121,33 +122,36 @@ const Appointments = () => {
           hidingPriority={8}
         />
         <Column
-          dataField={'description'}
-          caption={'Description'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'date'}
-          caption={'Date'}
+          dataField={'enrollDate'}
+          caption={'Enroll Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
 
         <Column
-          dataField={'occured'}
-          caption={'Occured'}
+          dataField={'gender'}
+          caption={'Gender'}
           hidingPriority={6}
         />
         <Column
-          dataField={'noOccurReason'}
-          caption={'Reason'}
+          dataField={'phoneNumber'}
+          caption={'Phone'}
           hidingPriority={6}
         />
         <Column
-          dataField={'nextDate'}
-          caption={'Next Date'}
-          dataType={'date'}
-          format={'dd MMMM yyy'}
+          dataField={'supportType'}
+          caption={'Support Type'}
+          hidingPriority={5}
+        />
+        <Column
+          dataField={'contraceptionMethod'}
+          caption={'Contraception Method'}
+          hidingPriority={5}
+        />
+           <Column
+          dataField={'srhServicePreffered'}
+          caption={'SRH Service Preffered'}
           hidingPriority={5}
         />
       </DataGrid>
@@ -155,4 +159,4 @@ const Appointments = () => {
   )
 };
 
-export default Appointments;
+export default Analytics;

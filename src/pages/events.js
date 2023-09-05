@@ -10,9 +10,9 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+import appInfo from '../app-info';
 
-const Analytics = () => {
+const Events = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
@@ -20,8 +20,8 @@ const Analytics = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'get-user-data/patients';
-  const title = 'Participants';
+  const currentUrl = 'get-user-data/events';
+  const title = 'Events';
 
   function showMessage(msg) {
 
@@ -122,36 +122,33 @@ const Analytics = () => {
           hidingPriority={8}
         />
         <Column
-          dataField={'enrollDate'}
-          caption={'Enroll Date'}
+          dataField={'description'}
+          caption={'Description'}
+          hidingPriority={6}
+        />
+        <Column
+          dataField={'date'}
+          caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
 
         <Column
-          dataField={'gender'}
-          caption={'Gender'}
+          dataField={'occured'}
+          caption={'Occured'}
           hidingPriority={6}
         />
         <Column
-          dataField={'phoneNumber'}
-          caption={'Phone'}
+          dataField={'noOccurReason'}
+          caption={'Reason'}
           hidingPriority={6}
         />
         <Column
-          dataField={'supportType'}
-          caption={'Support Type'}
-          hidingPriority={5}
-        />
-        <Column
-          dataField={'contraceptionMethod'}
-          caption={'Contraception Method'}
-          hidingPriority={5}
-        />
-           <Column
-          dataField={'srhServicePreffered'}
-          caption={'SRH Service Preffered'}
+          dataField={'nextDate'}
+          caption={'Next Date'}
+          dataType={'date'}
+          format={'dd MMMM yyy'}
           hidingPriority={5}
         />
       </DataGrid>
@@ -159,4 +156,4 @@ const Analytics = () => {
   )
 };
 
-export default Analytics;
+export default Events;

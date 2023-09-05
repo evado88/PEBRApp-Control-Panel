@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import 'devextreme/data/odata/store';
-import { Toast } from 'devextreme-react/toast';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 
@@ -12,7 +10,8 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+
+import Assist from '../assist';
 
 
 const Discussions = () => {
@@ -32,61 +31,46 @@ const Discussions = () => {
   const app = initializeApp(firebaseConfig);
 
   const [data, setData] = useState([]);
-  const [loading, setLLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Loading data...');
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState();
 
-  const currentUrl = 'color/list';
   const title = 'Discussions';
 
-  function showMessage(msg) {
+  useEffect(() => {
 
-    setError(true);
-    setMessage(msg);
+    async function laodData() {
 
-    setTimeout(() => {
+      Assist.log("Starting to discussions from firestore");
 
-      setError(false);
-      setMessage('')
+      // invalid url will trigger an 404 error
 
-    }, 4000);
+      const db = getFirestore(app);
 
-  }
+      const citiesCol = collection(db, 'twyshe-discussions');
+      const citySnapshot = await getDocs(citiesCol);
 
-  async function laodData() {
+      if (citySnapshot) {
 
- console.log(new Date().toISOString(), "Starting to load data from server",
-      appInfo.apiUrl + currentUrl);
+        const cityList = citySnapshot.docs.map(doc => doc.data());
 
-    // invalid url will trigger an 404 error
+        setData(cityList);
+        setLoading(false);
 
-    const db = getFirestore(app);
-    console.log('getting discussions');
-    const citiesCol = collection(db, 'twyshe-discussions');
-    const citySnapshot = await getDocs(citiesCol);
-    const cityList = citySnapshot.docs.map(doc => doc.data());
-    console.log(cityList);
+      } else {
+        // docSnap.data() will be undefined in this case
+        setLoading(false);
+        setLoadingText('Dicussions could not be loaded')
+      }
+    }
 
-    setData(cityList);
-
-  }
-
-  useEffect(() =>  {
 
     laodData();
 
-  }, []);
+  }, [app]);
 
   return (
     <React.Fragment>
       <h2 className={'content-block'}>{title}</h2>
-      <Toast
-        visible={error}
-        message={message}
-        type={'error'}
-        displayTime={6000}
-      />
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}

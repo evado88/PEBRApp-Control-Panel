@@ -16,22 +16,23 @@ function AuthProvider(props) {
     })();
   }, []);
 
-  const signIn = useCallback(async (email, password) => {
-    const result = await sendSignInRequest(email, password);
+  const signIn = useCallback(async (uemail, upassword) => {
 
-    console.log('sssssssss', result);
+    const result = await sendSignInRequest(uemail, upassword);
 
-    if (result !== undefined && result.isOk) {
-      setUser(result.data);
+    if (result.Succeeded) {
+
+      setUser(uemail);
     }
 
     return result;
+
   }, []);
 
   const signOut = useCallback(() => {
 
     setUser();
-    //window.sessionStorage.removeItem("ruser");
+    window.sessionStorage.removeItem("ruser");
 
   }, []);
 

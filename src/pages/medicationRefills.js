@@ -10,7 +10,7 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+import appInfo from '../app-info';
 
 const MedicationRefills = () => {
 

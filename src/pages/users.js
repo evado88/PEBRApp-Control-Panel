@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import 'devextreme/data/odata/store';
-import { Toast } from 'devextreme-react/toast';
-
 import DataGrid, {
   Column,
   Pager,
@@ -10,9 +8,10 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+import appInfo from '../app-info';
+import { Toast } from 'devextreme-react/toast';
 
-const Events = () => {
+const Users = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
@@ -20,8 +19,8 @@ const Events = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'get-user-data/events';
-  const title = 'Events';
+  const currentUrl = 'user/list';
+  const title = 'User';
 
   function showMessage(msg) {
 
@@ -94,7 +93,7 @@ const Events = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'itemId'}
+        keyExpr={'user_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -107,53 +106,47 @@ const Events = () => {
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <Column
-          dataField={'itemId'}
+          dataField={'user_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'username'}
-          caption={'Username'}
+          dataField={'user_username'}
+          caption={'Userame'}
+          hidingPriority={8}
+        />
+          <Column
+          dataField={'user_fname'}
+          caption={'First Name'}
+          hidingPriority={8}
+        />
+          <Column
+          dataField={'user_lname'}
+          caption={'Last Name'}
           hidingPriority={8}
         />
         <Column
-          dataField={'studyNo'}
-          caption={'Study No'}
+          dataField={'user_email'}
+          caption={'Code'}
           hidingPriority={8}
         />
+     
         <Column
-          dataField={'description'}
-          caption={'Description'}
+          dataField={'user_createuser'}
+          caption={'User'}
           hidingPriority={6}
         />
         <Column
-          dataField={'date'}
+          dataField={'user_createdate'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
 
-        <Column
-          dataField={'occured'}
-          caption={'Occured'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'noOccurReason'}
-          caption={'Reason'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'nextDate'}
-          caption={'Next Date'}
-          dataType={'date'}
-          format={'dd MMMM yyy'}
-          hidingPriority={5}
-        />
       </DataGrid>
     </React.Fragment>
   )
 };
 
-export default Events;
+export default Users;

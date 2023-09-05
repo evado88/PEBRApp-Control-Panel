@@ -10,9 +10,9 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+import appInfo from '../app-info';
 
-const Countries = () => {
+const Facilities = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
@@ -20,8 +20,8 @@ const Countries = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'country/list';
-  const title = 'Countries';
+  const currentUrl = 'facility/list';
+  const title = 'Facilities';
 
   function showMessage(msg) {
 
@@ -94,7 +94,7 @@ const Countries = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'country_id'}
+        keyExpr={'facility_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -107,28 +107,38 @@ const Countries = () => {
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <Column
-          dataField={'country_id'}
+          dataField={'facility_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'country_name'}
+          dataField={'facility_name'}
           caption={'Name'}
           hidingPriority={8}
         />
         <Column
-          dataField={'country_code'}
-          caption={'Code'}
+          dataField={'facility_address'}
+          caption={'Address'}
           hidingPriority={8}
         />
-     
         <Column
-          dataField={'country_createuser'}
-          caption={'User'}
+          dataField={'facility_phone'}
+          caption={'Phone'}
+          hidingPriority={6}
+        />
+
+        <Column
+          dataField={'facility_website'}
+          caption={'Website'}
           hidingPriority={6}
         />
         <Column
-          dataField={'country_createdate'}
+          dataField={'facility_email'}
+          caption={'Email'}
+          hidingPriority={6}
+        />
+        <Column
+          dataField={'facility_createdate'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
@@ -140,4 +150,4 @@ const Countries = () => {
   )
 };
 
-export default Countries;
+export default Facilities;

@@ -1,135 +1,75 @@
-
-//import appInfo from '../app-info';
-//import axios from "axios";
+import Assist from '../assist';
+import TaskResult from "../classes/taskresult.js";
+import AppInfo from '../app-info.js';
+import axios from "axios";
 
 export async function signIn(useremail, userpassword) {
 
   // Send request
-  console.log("Logging", useremail, userpassword);
+  const url = 'login';
 
-  if (useremail === 'nkoleevans@hotmail.com' ||
-    useremail === 'karen.hampanda@cuanschutz.edu' ||
-    useremail === 'alain.amstutz@unibas.ch' ||
-    useremail === 'madeleine.sehrt@cuanschutz.edu') {
+  Assist.log(`Starting to login user ${useremail} on server using url ${AppInfo.apiUrl + url}`, 'log');
 
-    if (userpassword === '1234') {
+  return new Promise(function (myResolve) {
 
-      window.sessionStorage.setItem('ruser', useremail);
-      
-      return {
-        isOk: true,
-        data: useremail
-      };
+      axios({
+          method: 'post',
+          url: AppInfo.apiUrl + url,
+          data: { username: useremail, password: userpassword },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        }).then((response) => {
 
-    } else {
-      return {
-        isOk: false,
-        message: "Invalid username or passowrd!"
-      };
-    }
+          Assist.log(`Response has completed for logging in ${useremail} from server`);
 
-  } else {
-    return {
-      isOk: false,
-      message: "Invalid username or passowrd!"
-    };
-  }
-/*
-  console.log(new Date().toISOString(), "Starting to load data from server",
-    `${appInfo.apiUrl}`);
+          if (typeof response.data == 'string') {
 
-  // invalid url will trigger an 404 error
-  try {
-    // Send request
+              Assist.log(`Unable to process response for logging in ${useremail} from server: ${JSON.stringify(response)}`);
 
-    axios({
-      method: 'post',
-      url: `${appInfo.apiUrl}${useremail}/${userpassword}`,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }).then((response) => {
+              myResolve(new TaskResult(false, 'Unable to process server response from server', null));
 
-      console.log(new Date().toISOString(), "Login response has completed from server", response);
+          } else {
 
-      if (typeof response.data == 'string') {
+              if (response.data.succeeded) {
 
-        console.log("Unable to process server response from server");
+                  myResolve(new TaskResult(true, '', response.data.items[0]));
 
-        return {
-          isOk: false,
-          message: "Unknown problem occured on server!"
-        };
+              } else {
 
-      } else {
+                  Assist.log(`Unable to login ${useremail}} from server: ${response.data.message}`);
+                  myResolve(new TaskResult(false, response.data.message, null));
 
-        if (response.data.succeeded) {
+              }
+          }
+      }).catch(error => {
 
-          console.log('Success', response.data[0].user_username);
+          Assist.log(`An error occured when logging in ${useremail} from server: ${JSON.stringify(error)}`);
+          myResolve(new TaskResult(false, `An error occured. Please try again`, null));
 
-          window.sessionStorage.setItem('ruser', useremail);
+      });
 
-          return {
-            isOk: true,
-            data: useremail
-          };
+  });
 
-        } else {
 
-          console.log('Failure', response.data.message);
 
-          return {
-            isOk: false,
-            message: response.data.message
-          };
-
-        }
-      }
-    }).catch(error => {
-
-      console.log(new Date().toISOString(), "An error occured from server", error, appInfo.apiUrl);
-
-      console.log('Error', error);
-
-      return {
-        isOk: false,
-        message: "Unknown error occured on server!"
-      };
-
-    });
-  }
-  catch {
-    return {
-      isOk: false,
-      message: "Authentication failed"
-    };
-  }
-*/
 
 }
 
 export async function getUser() {
 
-  try {
+  // Send request
+  const currentUser = sessionStorage.getItem('ruser');
 
-    // Send request
-    const currentUser = sessionStorage.getItem('ruser');
+  if (currentUser == null) {
 
-    if (currentUser == null) {
-
-      return {
-        isOk: false
-      };
-
-    } else {
-
-      return {
-        isOk: true,
-        data: currentUser
-      };
-    }
-  }
-  catch {
     return {
       isOk: false
+    };
+
+  } else {
+
+    return {
+      isOk: true,
+      data: currentUser
     };
   }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-//import { useHistory } from 'react-router-dom';
+
 import Form, {
   Item,
   Label,
@@ -10,27 +10,32 @@ import Form, {
 } from 'devextreme-react/form';
 import LoadIndicator from 'devextreme-react/load-indicator';
 import notify from 'devextreme/ui/notify';
+import './login-form.scss';
 import { useAuth } from '../../contexts/auth';
 
-import './login-form.scss';
-
 function Login() {
-  //const history = useHistory();
-  const { signIn } = useAuth();
+
   const [loading, setLoading] = useState(false);
   const formData = useRef({});
+  const { signIn } = useAuth();
 
   const onSubmit = useCallback(async (e) => {
+
     e.preventDefault();
+
     const { email, password } = formData.current;
+
     setLoading(true);
 
-    const result = await signIn(email, password);
+    const res = await signIn(email, password);
 
-    if (result !== undefined && !result.isOk) {
-      setLoading(false);
-      notify(result.message, 'error', 2000);
+    setLoading(false);
+
+    if (!res.Succeeded) {
+
+      notify(res.Message, 'error', 2000);
     }
+
   }, [signIn]);
 
   /*
@@ -40,7 +45,7 @@ function Login() {
 
   return (
     <form className={'login-form'} onSubmit={onSubmit}>
-      <div style={{ marginLeft: 'auto', marginRight: 'auto', textAlign:'center',marginBottom:'20px' }}>
+      <div style={{ marginLeft: 'auto', marginRight: 'auto', textAlign: 'center', marginBottom: '20px' }}>
         <img src='twyshe.png' style={{ width: '120px', height: 'auto' }} alt='Twyshe Logo' />
       </div>
       <Form formData={formData.current} disabled={loading}>

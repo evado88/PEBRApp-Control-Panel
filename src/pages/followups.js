@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import 'devextreme/data/odata/store';
+import { Toast } from 'devextreme-react/toast';
+
 import DataGrid, {
   Column,
   Pager,
@@ -8,10 +10,9 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
-import { Toast } from 'devextreme-react/toast';
+import appInfo from '../app-info';
 
-const Users = () => {
+const Followups = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
@@ -19,8 +20,8 @@ const Users = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'user/list';
-  const title = 'User';
+  const currentUrl = 'get-user-data/followups';
+  const title = 'Followups';
 
   function showMessage(msg) {
 
@@ -93,7 +94,7 @@ const Users = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'user_id'}
+        keyExpr={'itemId'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -106,47 +107,53 @@ const Users = () => {
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <Column
-          dataField={'user_id'}
+          dataField={'itemId'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'user_username'}
-          caption={'Userame'}
-          hidingPriority={8}
-        />
-          <Column
-          dataField={'user_fname'}
-          caption={'First Name'}
-          hidingPriority={8}
-        />
-          <Column
-          dataField={'user_lname'}
-          caption={'Last Name'}
+          dataField={'username'}
+          caption={'Username'}
           hidingPriority={8}
         />
         <Column
-          dataField={'user_email'}
-          caption={'Code'}
+          dataField={'studyNo'}
+          caption={'Study No'}
           hidingPriority={8}
         />
-     
         <Column
-          dataField={'user_createuser'}
-          caption={'User'}
+          dataField={'description'}
+          caption={'Description'}
           hidingPriority={6}
         />
         <Column
-          dataField={'user_createdate'}
+          dataField={'date'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
 
+        <Column
+          dataField={'occured'}
+          caption={'Occured'}
+          hidingPriority={6}
+        />
+        <Column
+          dataField={'noOccurReason'}
+          caption={'Reason'}
+          hidingPriority={6}
+        />
+        <Column
+          dataField={'nextDate'}
+          caption={'Next Date'}
+          dataType={'date'}
+          format={'dd MMMM yyy'}
+          hidingPriority={5}
+        />
       </DataGrid>
     </React.Fragment>
   )
 };
 
-export default Users;
+export default Followups;

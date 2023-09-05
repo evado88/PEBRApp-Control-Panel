@@ -10,9 +10,9 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+import appInfo from '../app-info';
 
-const Clients = () => {
+const Resources = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
@@ -20,8 +20,8 @@ const Clients = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'get-user-data/users';
-  const title = 'Clients';
+  const currentUrl = 'resource/list';
+  const title = 'Resources';
 
   function showMessage(msg) {
 
@@ -94,7 +94,7 @@ const Clients = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'itemId'}
+        keyExpr={'resource_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -107,51 +107,41 @@ const Clients = () => {
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <Column
-          dataField={'itemId'}
+          dataField={'resource_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'username'}
-          caption={'Username'}
+          dataField={'resource_name'}
+          caption={'Name'}
           hidingPriority={8}
         />
         <Column
-          dataField={'createDate'}
-          caption={'Create Date'}
+          dataField={'resource_description'}
+          caption={'Description'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'resource_url'}
+          caption={'URL'}
+          hidingPriority={6}
+        />
+        <Column
+          dataField={'resource_lastupdateuser'}
+          caption={'User'}
+          hidingPriority={6}
+        />
+        <Column
+          dataField={'resource_createdate'}
+          caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
-        <Column
-          dataField={'firstName'}
-          caption={'First Name'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'lastName'}
-          caption={'Last Name'}
-          hidingPriority={6}
-        />
 
-        <Column
-          dataField={'phoneNumber'}
-          caption={'Occured'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'healthCenterDescription'}
-          caption={'Health Center'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'isActive'}
-          caption={'Active'}
-          hidingPriority={6}
-        />
       </DataGrid>
     </React.Fragment>
   )
 };
 
-export default Clients;
+export default Resources;

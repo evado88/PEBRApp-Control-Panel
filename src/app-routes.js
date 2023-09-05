@@ -1,8 +1,9 @@
 import { withNavigationWatcher } from './contexts/navigation';
+
 import {
   HomePage, TasksPage, UsersPage, ClientsPage, ProfilePage, AnalyticsPage,
-  EventsPage, AppointmentsPage, FollowupsPage, MedicationRefillsPage, PatientsPage, FacilitiesPage, ResourcesPage, 
-  CountriesPage, ColorsPage, DiscussionsPage
+  EventsPage, AppointmentsPage, FollowupsPage, MedicationRefillsPage, PatientsPage, FacilitiesPage, ResourcesPage,
+  CountriesPage, ColorsPage, ColorPage, DiscussionsPage
 } from './pages';
 
 const routes = [
@@ -69,6 +70,14 @@ const routes = [
   {
     path: '/home',
     component: HomePage
+  },
+  {
+    path: '/color/edit/:eid',
+    component: ColorPage
+  },
+  {
+    path: '/color/add',
+    component: ColorPage
   }
 ];
 

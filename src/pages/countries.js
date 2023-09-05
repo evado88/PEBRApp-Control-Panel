@@ -10,9 +10,9 @@ import DataGrid, {
   FilterRow,
   LoadPanel
 } from 'devextreme-react/data-grid';
-import appInfo from '../../app-info';
+import appInfo from '../app-info';
 
-const Resources = () => {
+const Countries = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLLoading] = useState(true);
@@ -20,8 +20,8 @@ const Resources = () => {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState();
 
-  const currentUrl = 'resource/list';
-  const title = 'Resources';
+  const currentUrl = 'country/list';
+  const title = 'Countries';
 
   function showMessage(msg) {
 
@@ -94,7 +94,7 @@ const Resources = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'resource_id'}
+        keyExpr={'country_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -107,32 +107,28 @@ const Resources = () => {
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <Column
-          dataField={'resource_id'}
+          dataField={'country_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_name'}
+          dataField={'country_name'}
           caption={'Name'}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_description'}
-          caption={'Description'}
+          dataField={'country_code'}
+          caption={'Code'}
           hidingPriority={8}
         />
+     
         <Column
-          dataField={'resource_url'}
-          caption={'URL'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'resource_lastupdateuser'}
+          dataField={'country_createuser'}
           caption={'User'}
           hidingPriority={6}
         />
         <Column
-          dataField={'resource_createdate'}
+          dataField={'country_createdate'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
@@ -144,4 +140,4 @@ const Resources = () => {
   )
 };
 
-export default Resources;
+export default Countries;

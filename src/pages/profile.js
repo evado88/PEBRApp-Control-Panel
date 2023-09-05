@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './profile.scss';
 import Form from 'devextreme-react/form';
 
 const Profile = () => {
