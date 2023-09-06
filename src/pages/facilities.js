@@ -148,11 +148,17 @@ const Facilities = () => {
           dataField={'facility_website'}
           caption={'Website'}
           hidingPriority={6}
+          visible={false}
         />
         <Column
           dataField={'facility_email'}
           caption={'Email'}
           hidingPriority={6}
+        />
+        <Column
+          dataField={'f_status'}
+          caption={'Status'}
+          hidingPriority={8}
         />
         <Column
           dataField={'facility_createdate'}

@@ -12,6 +12,7 @@ import Toolbar, { Item } from 'devextreme-react/toolbar';
 import {
     Validator,
     RequiredRule,
+    EmailRule
 } from 'devextreme-react/validator';
 
 import AppInfo from '../app-info.js';
@@ -32,15 +33,15 @@ const Facility = (props) => {
     const [website, setWebsite] = useState('');
     const [phone, setPhone] = useState('');
 
-    const [contraception, setContraception] = useState(1);
-    const [prep, setPrep] = useState(1);
-    const [abortion, setAbortion] = useState(1);
-    const [menstrual, setMenstrual] = useState(1);
-    const [sti, setSTI] = useState(1);
-    const [art, setArt] = useState(1);
+    const [contraception, setContraception] = useState('');
+    const [prep, setPrep] = useState('');
+    const [abortion, setAbortion] = useState('');
+    const [menstrual, setMenstrual] = useState('');
+    const [sti, setSTI] = useState('');
+    const [art, setArt] = useState('');
 
-    const [lat, setLat] = useState(1);
-    const [lon, setLon] = useState(1);
+    const [lat, setLat] = useState('');
+    const [lon, setLon] = useState('');
 
     const [thumbnail, setThumbnail] = useState('');
 
@@ -86,12 +87,12 @@ const Facility = (props) => {
                         setWebsite(response.data.items[0].facility_website);
                         setPhone(response.data.items[0].facility_phone);
 
-                        setContraception(response.data.items[0].facility_contraception === 1 ? 'Yes': 'No');
-                        setPrep(response.data.items[0].facility_prep === 1 ? 'Yes': 'No');
-                        setAbortion(response.data.items[0].facility_abortion === 1 ? 'Yes': 'No');
-                        setMenstrual(response.data.items[0].facility_menstrual === 1 ? 'Yes': 'No');
-                        setSTI(response.data.items[0].facility_sti === 1 ? 'Yes': 'No');
-                        setArt(response.data.items[0].facility_art === 1 ? 'Yes': 'No');
+                        setContraception(response.data.items[0].facility_contraception === 1 ? 'Yes' : 'No');
+                        setPrep(response.data.items[0].facility_prep === 1 ? 'Yes' : 'No');
+                        setAbortion(response.data.items[0].facility_abortion === 1 ? 'Yes' : 'No');
+                        setMenstrual(response.data.items[0].facility_menstrual === 1 ? 'Yes' : 'No');
+                        setSTI(response.data.items[0].facility_sti === 1 ? 'Yes' : 'No');
+                        setArt(response.data.items[0].facility_art === 1 ? 'Yes' : 'No');
 
                         setLat(response.data.items[0].facility_lat);
                         setLon(response.data.items[0].facility_lon);
@@ -132,12 +133,26 @@ const Facility = (props) => {
 
         setLoading(true);
 
-        const url = AppInfo.apiUrl + 'color/update';
+        const url = AppInfo.apiUrl + 'facility/update';
 
         const fields = {
             uid: id,
             uname: name,
-            ucode: address,
+            uaddress: address,
+            utollfree: tollfree,
+            uwhatsapp: whatsapp,
+            uemail: email,
+            uwebsite: website,
+            uphone: phone,
+            ucontraception: contraception === 'Yes' ? 1 : 2,
+            uprep: prep === 'Yes' ? 1 : 2,
+            uabortion: abortion === 'Yes' ? 1 : 2,
+            umenstrual: menstrual === 'Yes' ? 1 : 2,
+            usti: sti === 'Yes' ? 1 : 2,
+            uart: art === 'Yes' ? 1 : 2,
+            ulat: lat,
+            ulon: lon,
+            uthumbnail: thumbnail,
             ustatus: status === 'Active' ? 1 : 2,
             user: window.sessionStorage.getItem('ruser')
         }
@@ -164,12 +179,31 @@ const Facility = (props) => {
                 if (response.data.succeeded) {
 
                     setName(response.data.items[0].facility_name);
-                    setAddress(response.data.items[0].facility_code);
-                    setStatus(response.data.items[0].c_status);
+                    setAddress(response.data.items[0].facility_address);
+                    setTollfree(response.data.items[0].facility_tollfree);
+                    setWhatsapp(response.data.items[0].facility_whatsapp);
+                    setEmail(response.data.items[0].facility_email);
+                    setWebsite(response.data.items[0].facility_website);
+                    setPhone(response.data.items[0].facility_phone);
+
+                    setContraception(response.data.items[0].facility_contraception === 1 ? 'Yes' : 'No');
+                    setPrep(response.data.items[0].facility_prep === 1 ? 'Yes' : 'No');
+                    setAbortion(response.data.items[0].facility_abortion === 1 ? 'Yes' : 'No');
+                    setMenstrual(response.data.items[0].facility_menstrual === 1 ? 'Yes' : 'No');
+                    setSTI(response.data.items[0].facility_sti === 1 ? 'Yes' : 'No');
+                    setArt(response.data.items[0].facility_art === 1 ? 'Yes' : 'No');
+
+                    setLat(response.data.items[0].facility_lat);
+                    setLon(response.data.items[0].facility_lon);
+
+                    setThumbnail(response.data.items[0].facility_thumbnailUrl);
+
+                    setStatus(response.data.items[0].f_status);
+
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/color/edit/${response.data.items[0].facility_id}`);
+                        history.push(`/facility/edit/${response.data.items[0].facility_id}`);
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
@@ -237,24 +271,21 @@ const Facility = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setAddress(e.value)}
                                     value={address}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Address' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Address is required" />
                                     </Validator>
                                 </TextBox>
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Tollfee</div>
+                            <div className="dx-field-label">Toll-Fee No</div>
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setTollfree(e.value)}
                                     value={tollfree}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Toll-Fee' }}
                                 >
-                                    <Validator>
-                                        <RequiredRule message="Color is required" />
-                                    </Validator>
                                 </TextBox>
                             </div>
                         </div>
@@ -263,11 +294,8 @@ const Facility = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setWhatsapp(e.value)}
                                     value={whatsapp}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Whatsapp' }}
                                 >
-                                    <Validator>
-                                        <RequiredRule message="Color is required" />
-                                    </Validator>
                                 </TextBox>
                             </div>
                         </div>
@@ -276,10 +304,10 @@ const Facility = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setEmail(e.value)}
                                     value={email}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Email' }}
                                 >
-                                    <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <Validator>
+                                        <EmailRule message="Please enter a valid email address" />
                                     </Validator>
                                 </TextBox>
                             </div>
@@ -289,11 +317,8 @@ const Facility = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setWebsite(e.value)}
                                     value={website}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Website' }}
                                 >
-                                    <Validator>
-                                        <RequiredRule message="Color is required" />
-                                    </Validator>
                                 </TextBox>
                             </div>
                         </div>
@@ -302,11 +327,8 @@ const Facility = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setPhone(e.value)}
                                     value={phone}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Phone' }}
                                 >
-                                    <Validator>
-                                        <RequiredRule message="Color is required" />
-                                    </Validator>
                                 </TextBox>
                             </div>
                         </div>
@@ -316,7 +338,7 @@ const Facility = (props) => {
                                 <SelectBox dataSource={AppInfo.yesNoList} onValueChanged={(e) => setContraception(e.value)}
                                     validationMessagePosition="left" value={contraception} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="Status is required" />
+                                        <RequiredRule message="Please if facility provides contraceptive services" />
                                     </Validator>
                                 </SelectBox>
                             </div>
@@ -327,7 +349,7 @@ const Facility = (props) => {
                                 <SelectBox dataSource={AppInfo.yesNoList} onValueChanged={(e) => setPrep(e.value)}
                                     validationMessagePosition="left" value={prep} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="PrEP is required" />
+                                        <RequiredRule message="Please if facility provides PrEP" />
                                     </Validator>
                                 </SelectBox>
                             </div>
@@ -338,7 +360,7 @@ const Facility = (props) => {
                                 <SelectBox dataSource={AppInfo.yesNoList} onValueChanged={(e) => setAbortion(e.value)}
                                     validationMessagePosition="left" value={abortion} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="Abortion is required" />
+                                        <RequiredRule message="Please if facility provides abortion services" />
                                     </Validator>
                                 </SelectBox>
                             </div>
@@ -349,7 +371,7 @@ const Facility = (props) => {
                                 <SelectBox dataSource={AppInfo.yesNoList} onValueChanged={(e) => setMenstrual(e.value)}
                                     validationMessagePosition="left" value={menstrual} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="Menstrual is required" />
+                                        <RequiredRule message="Please if facility provides menstrual services" />
                                     </Validator>
                                 </SelectBox>
                             </div>
@@ -360,7 +382,7 @@ const Facility = (props) => {
                                 <SelectBox dataSource={AppInfo.yesNoList} onValueChanged={(e) => setSTI(e.value)}
                                     validationMessagePosition="left" value={sti} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="STI is required" />
+                                        <RequiredRule message="Please if facility provides STI services" />
                                     </Validator>
                                 </SelectBox>
                             </div>
@@ -371,7 +393,7 @@ const Facility = (props) => {
                                 <SelectBox dataSource={AppInfo.yesNoList} onValueChanged={(e) => setArt(e.value)}
                                     validationMessagePosition="left" value={art} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="ART is required" />
+                                        <RequiredRule message="Please if facility provides ART service" />
                                     </Validator>
                                 </SelectBox>
                             </div>
@@ -381,10 +403,10 @@ const Facility = (props) => {
                             <div className="dx-field-value">
                                 <NumberBox disabled={error} onValueChanged={(e) => setLon(e.value)}
                                     value={lon}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Longitude' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Longitude is required" />
                                     </Validator>
                                 </NumberBox>
                             </div>
@@ -394,10 +416,10 @@ const Facility = (props) => {
                             <div className="dx-field-value">
                                 <NumberBox disabled={error} onValueChanged={(e) => setLat(e.value)}
                                     value={lat}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Latitude' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Latitude is required" />
                                     </Validator>
                                 </NumberBox>
                             </div>
@@ -409,10 +431,10 @@ const Facility = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setThumbnail(e.value)}
                                     value={thumbnail}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Thumbnail' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Thumbnail is required" />
                                     </Validator>
                                 </TextBox>
                             </div>

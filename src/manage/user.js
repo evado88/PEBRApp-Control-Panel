@@ -7,10 +7,10 @@ import ValidationSummary from 'devextreme-react/validation-summary';
 import { LoadPanel } from 'devextreme-react/load-panel';
 import { useHistory } from "react-router-dom";
 import Toolbar, { Item } from 'devextreme-react/toolbar';
-
 import {
     Validator,
     RequiredRule,
+    EmailRule
 } from 'devextreme-react/validator';
 
 import AppInfo from '../app-info.js';
@@ -68,7 +68,7 @@ const User = (props) => {
                         setLastName(response.data.items[0].user_lname);
                         setPhone(response.data.items[0].user_phone);
                         setEmail(response.data.items[0].user_email);
-                        setRole(response.data.items[0].user_role == 1 ? 'Administrator' : 'Researcher');
+                        setRole(response.data.items[0].user_role === 1 ? 'Administrator' : 'Researcher');
                         setStatus(response.data.items[0].u_status);
 
                     } else {
@@ -101,17 +101,24 @@ const User = (props) => {
 
         e.preventDefault();
 
+
         setLoading(true);
 
-        const url = AppInfo.apiUrl + 'color/update';
+        const url = AppInfo.apiUrl + 'user/update';
 
         const fields = {
             uid: id,
             uname: username,
-            ucode: firstName,
+            ufname: firstName,
+            ulname: lastName,
+            uphone: phone,
+            uemail: email,
+            urole: role === 'Administrator' ? 1 : 2,
             ustatus: status === 'Active' ? 1 : 2,
             user: window.sessionStorage.getItem('ruser')
         }
+
+        console.log(fields);
 
         Assist.log(`Starting to ${verb} ${title} on server ${url}`);
 
@@ -139,7 +146,7 @@ const User = (props) => {
                     setLastName(response.data.items[0].user_lname);
                     setPhone(response.data.items[0].user_phone);
                     setEmail(response.data.items[0].user_email);
-                    setRole(response.data.items[0].user_role == 1 ? 'Administrator' : 'Researcher');
+                    setRole(response.data.items[0].user_role === 1 ? 'Administrator' : 'Researcher');
                     setStatus(response.data.items[0].u_status);
 
 
@@ -192,18 +199,19 @@ const User = (props) => {
                             },
                         }} />
                 </Toolbar>
-                <form action="your-action" onSubmit={onFormSubmit}>
-
+                <form action="your-action" onSubmit={onFormSubmit} disabled={error || loading}>
                     <div className="dx-fieldset">
                         <div className="dx-fieldset-header">Properties</div>
 
                         <div className="dx-field">
-                            <div className="dx-field-label">Name</div>
+                            <div className="dx-field-label">Username</div>
                             <div className="dx-field-value">
                                 <TextBox validationMessagePosition="left" onValueChanged={(e) => setUsername(e.value)}
-                                    inputAttr={{ 'aria-label': 'Name' }} value={username} disabled={error}>
+                                    inputAttr={{ 'aria-label': 'Name' }} value={username}
+                                    disabled={error} readOnly={id === 0 ? false : true}>
                                     <Validator>
-                                        <RequiredRule message="Name is required" />
+                                        <RequiredRule message="Username is required" />
+
                                     </Validator>
                                 </TextBox>
                             </div>
@@ -213,10 +221,10 @@ const User = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setFirstName(e.value)}
                                     value={firstName}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'First name' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="First name is required" />
                                     </Validator>
                                 </TextBox>
                             </div>
@@ -226,10 +234,10 @@ const User = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setLastName(e.value)}
                                     value={lastName}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Last name' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Last name is required" />
                                     </Validator>
                                 </TextBox>
                             </div>
@@ -239,11 +247,8 @@ const User = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setPhone(e.value)}
                                     value={phone}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Phone' }}
                                 >
-                                    <Validator>
-                                        <RequiredRule message="Color is required" />
-                                    </Validator>
                                 </TextBox>
                             </div>
                         </div>
@@ -252,10 +257,11 @@ const User = (props) => {
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setEmail(e.value)}
                                     value={email}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Email' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Email is required" />
+                                        <EmailRule message="Please enter a valid email address" />
                                     </Validator>
                                 </TextBox>
                             </div>
@@ -266,7 +272,7 @@ const User = (props) => {
                                 <SelectBox dataSource={AppInfo.roleList} onValueChanged={(e) => setRole(e.value)}
                                     validationMessagePosition="left" value={role} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="Status is required" />
+                                        <RequiredRule message="Role is required" />
                                     </Validator>
                                 </SelectBox>
                             </div>

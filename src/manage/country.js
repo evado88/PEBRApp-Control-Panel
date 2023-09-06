@@ -95,7 +95,7 @@ const Country = (props) => {
 
         setLoading(true);
 
-        const url = AppInfo.apiUrl + 'color/update';
+        const url = AppInfo.apiUrl + 'country/update';
 
         const fields = {
             uid: id,
@@ -132,7 +132,7 @@ const Country = (props) => {
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/country/edit/${response.data.items[0].countryid}`);
+                        history.push(`/country/edit/${response.data.items[0].country_id}`);
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
@@ -187,23 +187,23 @@ const Country = (props) => {
                         <div className="dx-field">
                             <div className="dx-field-label">Name</div>
                             <div className="dx-field-value">
-                                <TextBox validationMessagePosition="left" onValueChanged={(e) => setName(e.value)}
+                                <SelectBox  dataSource={AppInfo.countryList} validationMessagePosition="left" onValueChanged={(e) => setName(e.value)}
                                     inputAttr={{ 'aria-label': 'Name' }} value={name} disabled={error}>
                                     <Validator>
                                         <RequiredRule message="Name is required" />
                                     </Validator>
-                                </TextBox>
+                                </SelectBox >
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Color</div>
+                            <div className="dx-field-label">Phone Code</div>
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setCode(e.value)}
                                     value={code}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                    inputAttr={{ 'aria-label': 'Code' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Phone code is required" />
                                     </Validator>
                                 </TextBox>
                             </div>

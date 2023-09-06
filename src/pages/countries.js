@@ -138,7 +138,11 @@ const Countries = () => {
           caption={'Code'}
           hidingPriority={8}
         />
-     
+        <Column
+          dataField={'c_status'}
+          caption={'Status'}
+          hidingPriority={8}
+        />
         <Column
           dataField={'country_createuser'}
           caption={'User'}

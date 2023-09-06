@@ -142,6 +142,12 @@ const Resources = () => {
           dataField={'resource_url'}
           caption={'URL'}
           hidingPriority={6}
+          visible={false}
+        />
+        <Column
+          dataField={'r_status'}
+          caption={'Status'}
+          hidingPriority={8}
         />
         <Column
           dataField={'resource_lastupdateuser'}

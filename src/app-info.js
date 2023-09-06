@@ -6,7 +6,7 @@ const AppInfo = {
   statusList: ['Active', 'Disabled'],
   yesNoList: ['Yes', 'No'],
   roleList: ['Administrator','Researcher'],
-  countryList: ['Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola',
+  countryList: ['Zambia', 'United States', 'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola',
     'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan',
     'The   Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize',
     'Benin', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei',
@@ -29,8 +29,8 @@ const AppInfo = {
     'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa',
     'South Sudan', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Swaziland', 'Sweden', 'Switzerland', 'Syria', 'Tajikistan',
     'Tanzania', 'Thailand', 'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Tuvalu', 'Uganda',
-    'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City',
-    'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe']
+    'Ukraine', 'United Arab Emirates', 'United Kingdom', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City',
+    'Venezuela', 'Vietnam', 'Yemen', 'Zimbabwe']
 };
 
 export default AppInfo;

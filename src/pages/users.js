@@ -59,6 +59,8 @@ const Users = () => {
 
   const deleteItem = (e) => {
 
+
+
     Assist.deleteItem(pageConfig.title, pageConfig.deleteUrl, e.key).then((res) => {
 
       e.cancel = false;
@@ -66,8 +68,8 @@ const Users = () => {
 
     }).catch((ex) => {
 
-      Assist.showMessage(ex.Message, "warning");
       e.cancel = true;
+      Assist.showMessage(ex.Message, "warning");
     });
 
   }
@@ -105,7 +107,7 @@ const Users = () => {
             }
           }
         }}>
-        <Paging defaultPageSize={10} />
+        <Paging defaultPageSize={5} />
         <Editing
           mode="row"
           allowUpdating={false}
@@ -147,7 +149,11 @@ const Users = () => {
           caption={'Code'}
           hidingPriority={8}
         />
-
+        <Column
+          dataField={'u_status'}
+          caption={'Status'}
+          hidingPriority={8}
+        />
         <Column
           dataField={'user_createuser'}
           caption={'User'}

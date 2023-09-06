@@ -12,7 +12,7 @@ import Content from './Content';
 import UnauthenticatedContent from './UnauthenticatedContent';
 
 function App() {
-  const { user, loading} = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) {
     return <LoadPanel visible={true} />;

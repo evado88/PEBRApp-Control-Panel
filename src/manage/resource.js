@@ -99,12 +99,14 @@ const Resource = (props) => {
 
         setLoading(true);
 
-        const url = AppInfo.apiUrl + 'color/update';
+        const url = AppInfo.apiUrl + 'resource/update';
 
         const fields = {
             uid: id,
             uname: name,
-            ucode: description,
+            udescription: description,
+            uurl: url,
+            uthumbnail: thumbnail,
             ustatus: status === 'Active' ? 1 : 2,
             user: window.sessionStorage.getItem('ruser')
         }
@@ -138,7 +140,7 @@ const Resource = (props) => {
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/color/edit/${response.data.items[0].resource_id}`);
+                        history.push(`/resource/edit/${response.data.items[0].resource_id}`);
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
@@ -202,14 +204,14 @@ const Resource = (props) => {
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Decription</div>
+                            <div className="dx-field-label">Description</div>
                             <div className="dx-field-value">
                                 <TextBox disabled={error} onValueChanged={(e) => setDescription(e.value)}
                                     value={description}
-                                    inputAttr={{ 'aria-label': 'Decription' }}
+                                    inputAttr={{ 'aria-label': 'Description' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Decription is required" />
+                                        <RequiredRule message="Description is required" />
                                     </Validator>
                                 </TextBox>
                             </div>
