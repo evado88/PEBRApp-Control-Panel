@@ -8,7 +8,8 @@ import DataGrid, {
   Pager,
   Paging,
   FilterRow,
-  LoadPanel
+  LoadPanel,
+  Editing,
 } from 'devextreme-react/data-grid';
 
 import Assist from '../assist';
@@ -17,28 +18,24 @@ import Assist from '../assist';
 const Discussions = () => {
 
   // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCbH2wyJmcqTQU3gIl_raQwr0AmVuG_bhA",
-    authDomain: "myzambia-5c62c.firebaseapp.com",
-    databaseURL: "https://myzambia-5c62c.firebaseio.com",
-    projectId: "myzambia-5c62c",
-    storageBucket: "myzambia-5c62c.appspot.com",
-    messagingSenderId: "878075714362",
-    appId: "1:878075714362:web:55575ac3647ff7d3cd0e03"
-  };
-
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+  const app = initializeApp(Assist.firebaseConfig);
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Loading data...');
 
-  const title = 'Discussions';
+
+  const pageConfig = {
+    currentUrl: 'discussion/list',
+    deleteUrl: 'discussion/delete',
+    single: 'discussion',
+    title: 'Discussions',
+  }
 
   useEffect(() => {
 
-    async function laodData() {
+    async function loadData() {
 
       Assist.log("Starting to discussions from firestore");
 
@@ -46,14 +43,19 @@ const Discussions = () => {
 
       const db = getFirestore(app);
 
-      const citiesCol = collection(db, 'twyshe-discussions');
-      const citySnapshot = await getDocs(citiesCol);
+      const discussionsCol = collection(db, 'twyshe-discussions');
+      const discussionsSnapshot = await getDocs(discussionsCol);
 
-      if (citySnapshot) {
+      if (discussionsSnapshot) {
 
-        const cityList = citySnapshot.docs.map(doc => doc.data());
+        const discussionsList = discussionsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          date: new Date(doc.data().posted.seconds * 1000),
+          statusName: doc.data().status === 1 ? 'Active' : 'Disabled',
+           ...doc.data()
+        }));
 
-        setData(cityList);
+        setData(discussionsList);
         setLoading(false);
 
       } else {
@@ -64,13 +66,13 @@ const Discussions = () => {
     }
 
 
-    laodData();
+    loadData();
 
   }, [app]);
 
   return (
     <React.Fragment>
-      <h2 className={'content-block'}>{title}</h2>
+      <h2 className={'content-block'}>{pageConfig.title}</h2>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
@@ -82,18 +84,36 @@ const Discussions = () => {
         columnAutoWidth={true}
         columnHidingEnabled={true}
       >
+        <Editing
+          mode="row"
+          allowUpdating={false}
+          allowDeleting={false}
+          allowAdding={false} />
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <Column
+          dataField={'id'}
+          caption={'ID'}
+          hidingPriority={8}
+        />
+        <Column
           dataField={'title'}
           caption={'Title'}
           hidingPriority={8}
+          cellRender={(e) => {
+            return <a href={`#/discussion/edit/${e.data.id}`}>{e.data.title}</a>;
+          }}
         />
         <Column
           dataField={'description'}
           caption={'Description'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'statusName'}
+          caption={'Status'}
           hidingPriority={8}
         />
         <Column
@@ -107,7 +127,12 @@ const Discussions = () => {
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
-
+        <Column
+          dataField={'date'}
+          caption={'Date'}
+          format={'dd MMM yyy HH:mm'}
+          hidingPriority={5}
+        />
       </DataGrid>
     </React.Fragment>
   )

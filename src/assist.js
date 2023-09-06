@@ -5,6 +5,16 @@ import TaskResult from "./classes/taskresult.js";
 
 class Assist {
 
+   static firebaseConfig = {
+        apiKey: "AIzaSyCbH2wyJmcqTQU3gIl_raQwr0AmVuG_bhA",
+        authDomain: "myzambia-5c62c.firebaseapp.com",
+        databaseURL: "https://myzambia-5c62c.firebaseio.com",
+        projectId: "myzambia-5c62c",
+        storageBucket: "myzambia-5c62c.appspot.com",
+        messagingSenderId: "878075714362",
+        appId: "1:878075714362:web:55575ac3647ff7d3cd0e03"
+      };
+
     ///Logs a message to the console
     static log(message, type = 'log') {
 

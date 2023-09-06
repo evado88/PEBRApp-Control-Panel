@@ -4,7 +4,6 @@ import SelectBox from 'devextreme-react/select-box';
 import { TextBox } from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
 import ValidationSummary from 'devextreme-react/validation-summary';
-import ColorBox from 'devextreme-react/color-box';
 import { LoadPanel } from 'devextreme-react/load-panel';
 import { useHistory } from "react-router-dom";
 import Toolbar, { Item } from 'devextreme-react/toolbar';
@@ -17,18 +16,22 @@ import {
 import AppInfo from '../app-info.js';
 import Assist from '../assist.js';
 
-const Color = (props) => {
+const User = (props) => {
 
     const history = useHistory();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
-    const [name, setName] = useState('');
-    const [code, setCode] = useState('');
+    const [username, setUsername] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [role, setRole] = useState('');
     const [status, setStatus] = useState('');
 
-    const title = 'Color';
+    const title = 'User';
     const id = props.match.params.eid === undefined ? 0 : props.match.params.eid;
     const action = id === 0 ? 'Add' : 'Update';
     const verb = id === 0 ? 'adding' : 'Updating';
@@ -40,7 +43,7 @@ const Color = (props) => {
 
             setLoading(true);
 
-            const url = AppInfo.apiUrl + '/color/id/' + id;
+            const url = AppInfo.apiUrl + '/user/id/' + id;
 
             Assist.log(`Starting to load ${title} from server ${url}`);
 
@@ -60,9 +63,13 @@ const Color = (props) => {
                     if (response.data.succeeded) {
                         setError(false);
 
-                        setName(response.data.items[0].color_name);
-                        setCode(response.data.items[0].color_code);
-                        setStatus(response.data.items[0].c_status);
+                        setUsername(response.data.items[0].user_username);
+                        setFirstName(response.data.items[0].user_fname);
+                        setLastName(response.data.items[0].user_lname);
+                        setPhone(response.data.items[0].user_phone);
+                        setEmail(response.data.items[0].user_email);
+                        setRole(response.data.items[0].user_role == 1 ? 'Administrator' : 'Researcher');
+                        setStatus(response.data.items[0].u_status);
 
                     } else {
 
@@ -94,26 +101,14 @@ const Color = (props) => {
 
         e.preventDefault();
 
-        console.log(new Date(), 'starting');
-
-        // const res = await Assist.loadData()
-        Assist.loadData().then((r) => {
-            console.log(new Date(), 'then', r);
-        }).catch((e) => {
-            console.log(new Date(), 'catch', e);
-        });
-
-        console.log(new Date(), 'ending', null);
-
-
         setLoading(true);
 
         const url = AppInfo.apiUrl + 'color/update';
 
         const fields = {
             uid: id,
-            uname: name,
-            ucode: code,
+            uname: username,
+            ucode: firstName,
             ustatus: status === 'Active' ? 1 : 2,
             user: window.sessionStorage.getItem('ruser')
         }
@@ -139,13 +134,18 @@ const Color = (props) => {
 
                 if (response.data.succeeded) {
 
-                    setName(response.data.items[0].color_name);
-                    setCode(response.data.items[0].color_code);
-                    setStatus(response.data.items[0].c_status);
+                    setUsername(response.data.items[0].user_username);
+                    setFirstName(response.data.items[0].user_fname);
+                    setLastName(response.data.items[0].user_lname);
+                    setPhone(response.data.items[0].user_phone);
+                    setEmail(response.data.items[0].user_email);
+                    setRole(response.data.items[0].user_role == 1 ? 'Administrator' : 'Researcher');
+                    setStatus(response.data.items[0].u_status);
+
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/color/edit/${response.data.items[0].color_id}`);
+                        history.push(`/user/edit/${response.data.items[0].user_id}`);
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
@@ -200,8 +200,8 @@ const Color = (props) => {
                         <div className="dx-field">
                             <div className="dx-field-label">Name</div>
                             <div className="dx-field-value">
-                                <TextBox validationMessagePosition="left" onValueChanged={(e) => setName(e.value)}
-                                    inputAttr={{ 'aria-label': 'Name' }} value={name} disabled={error}>
+                                <TextBox validationMessagePosition="left" onValueChanged={(e) => setUsername(e.value)}
+                                    inputAttr={{ 'aria-label': 'Name' }} value={username} disabled={error}>
                                     <Validator>
                                         <RequiredRule message="Name is required" />
                                     </Validator>
@@ -209,16 +209,66 @@ const Color = (props) => {
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Color</div>
+                            <div className="dx-field-label">First name</div>
                             <div className="dx-field-value">
-                                <ColorBox disabled={error} onValueChanged={(e) => setCode(e.value)}
-                                    value={code}
+                                <TextBox disabled={error} onValueChanged={(e) => setFirstName(e.value)}
+                                    value={firstName}
                                     inputAttr={{ 'aria-label': 'Color' }}
                                 >
                                     <Validator>
                                         <RequiredRule message="Color is required" />
                                     </Validator>
-                                </ColorBox>
+                                </TextBox>
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Last name</div>
+                            <div className="dx-field-value">
+                                <TextBox disabled={error} onValueChanged={(e) => setLastName(e.value)}
+                                    value={lastName}
+                                    inputAttr={{ 'aria-label': 'Color' }}
+                                >
+                                    <Validator>
+                                        <RequiredRule message="Color is required" />
+                                    </Validator>
+                                </TextBox>
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Phone</div>
+                            <div className="dx-field-value">
+                                <TextBox disabled={error} onValueChanged={(e) => setPhone(e.value)}
+                                    value={phone}
+                                    inputAttr={{ 'aria-label': 'Color' }}
+                                >
+                                    <Validator>
+                                        <RequiredRule message="Color is required" />
+                                    </Validator>
+                                </TextBox>
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Email</div>
+                            <div className="dx-field-value">
+                                <TextBox disabled={error} onValueChanged={(e) => setEmail(e.value)}
+                                    value={email}
+                                    inputAttr={{ 'aria-label': 'Color' }}
+                                >
+                                    <Validator>
+                                        <RequiredRule message="Color is required" />
+                                    </Validator>
+                                </TextBox>
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Role</div>
+                            <div className="dx-field-value">
+                                <SelectBox dataSource={AppInfo.roleList} onValueChanged={(e) => setRole(e.value)}
+                                    validationMessagePosition="left" value={role} disabled={error}>
+                                    <Validator>
+                                        <RequiredRule message="Status is required" />
+                                    </Validator>
+                                </SelectBox>
                             </div>
                         </div>
                         <div className="dx-field">
@@ -251,4 +301,5 @@ const Color = (props) => {
     );
 }
 
-export default Color;
+
+export default User;

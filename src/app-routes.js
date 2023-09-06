@@ -1,9 +1,8 @@
 import { withNavigationWatcher } from './contexts/navigation';
 
 import {
-  HomePage, TasksPage, UsersPage, ClientsPage, ProfilePage, AnalyticsPage,
-  EventsPage, AppointmentsPage, FollowupsPage, MedicationRefillsPage, PatientsPage, FacilitiesPage, ResourcesPage,
-  CountriesPage, ColorsPage, ColorPage, DiscussionsPage
+  HomePage, UsersPage, UserPage, PeerNavigatorsPage , ProfilePage, AnalyticsPage, FollowupsPage, PatientsPage, FacilitiesPage, ResourcesPage,
+  CountriesPage, ColorsPage, ColorPage, DiscussionsPage, FacilityPage, ResourcePage, CountryPage, DiscussionPage
 } from './pages';
 
 const routes = [
@@ -12,24 +11,12 @@ const routes = [
     component: UsersPage
   },
   {
-    path: '/clients',
-    component: ClientsPage
+    path: '/peer-navigators',
+    component: PeerNavigatorsPage 
   },
   {
-    path: '/patients',
+    path: '/participants',
     component: PatientsPage
-  },
-  {
-    path: '/medication-refills',
-    component: MedicationRefillsPage
-  },
-  {
-    path: '/events',
-    component: EventsPage
-  },
-  {
-    path: '/appointments',
-    component: AppointmentsPage
   },
   {
     path: '/analytics',
@@ -38,10 +25,6 @@ const routes = [
   {
     path: '/follow-ups',
     component: FollowupsPage
-  },
-  {
-    path: '/tasks',
-    component: TasksPage
   },
   {
     path: '/profile',
@@ -76,9 +59,49 @@ const routes = [
     component: ColorPage
   },
   {
+    path: '/user/add',
+    component: UserPage
+  },
+  {
+    path: '/user/edit/:eid',
+    component: UserPage
+  },
+  {
+    path: '/facility/add',
+    component: FacilityPage
+  },
+  {
+    path: '/facility/edit/:eid',
+    component: FacilityPage
+  },
+  {
+    path: '/resource/add',
+    component: ResourcePage
+  },
+  {
+    path: '/resource/edit/:eid',
+    component: ResourcePage
+  },
+  {
+    path: '/country/add',
+    component: CountryPage
+  },
+  {
+    path: '/country/edit/:eid',
+    component: CountryPage
+  },
+  {
     path: '/color/add',
     component: ColorPage
-  }
+  },
+  {
+    path: '/color/edit/:eid',
+    component: ColorPage
+  },
+  {
+    path: '/discussion/edit/:eid',
+    component: DiscussionPage
+  },
 ];
 
 export default routes.map(route => {

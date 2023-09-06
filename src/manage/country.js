@@ -4,7 +4,6 @@ import SelectBox from 'devextreme-react/select-box';
 import { TextBox } from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
 import ValidationSummary from 'devextreme-react/validation-summary';
-import ColorBox from 'devextreme-react/color-box';
 import { LoadPanel } from 'devextreme-react/load-panel';
 import { useHistory } from "react-router-dom";
 import Toolbar, { Item } from 'devextreme-react/toolbar';
@@ -17,7 +16,7 @@ import {
 import AppInfo from '../app-info.js';
 import Assist from '../assist.js';
 
-const Color = (props) => {
+const Country = (props) => {
 
     const history = useHistory();
 
@@ -28,7 +27,7 @@ const Color = (props) => {
     const [code, setCode] = useState('');
     const [status, setStatus] = useState('');
 
-    const title = 'Color';
+    const title = 'Country';
     const id = props.match.params.eid === undefined ? 0 : props.match.params.eid;
     const action = id === 0 ? 'Add' : 'Update';
     const verb = id === 0 ? 'adding' : 'Updating';
@@ -40,7 +39,7 @@ const Color = (props) => {
 
             setLoading(true);
 
-            const url = AppInfo.apiUrl + '/color/id/' + id;
+            const url = AppInfo.apiUrl + 'country/id/' + id;
 
             Assist.log(`Starting to load ${title} from server ${url}`);
 
@@ -60,8 +59,8 @@ const Color = (props) => {
                     if (response.data.succeeded) {
                         setError(false);
 
-                        setName(response.data.items[0].color_name);
-                        setCode(response.data.items[0].color_code);
+                        setName(response.data.items[0].country_name);
+                        setCode(response.data.items[0].country_code);
                         setStatus(response.data.items[0].c_status);
 
                     } else {
@@ -93,18 +92,6 @@ const Color = (props) => {
     const onFormSubmit = async (e) => {
 
         e.preventDefault();
-
-        console.log(new Date(), 'starting');
-
-        // const res = await Assist.loadData()
-        Assist.loadData().then((r) => {
-            console.log(new Date(), 'then', r);
-        }).catch((e) => {
-            console.log(new Date(), 'catch', e);
-        });
-
-        console.log(new Date(), 'ending', null);
-
 
         setLoading(true);
 
@@ -139,13 +126,13 @@ const Color = (props) => {
 
                 if (response.data.succeeded) {
 
-                    setName(response.data.items[0].color_name);
-                    setCode(response.data.items[0].color_code);
+                    setName(response.data.items[0].country_name);
+                    setCode(response.data.items[0].country_code);
                     setStatus(response.data.items[0].c_status);
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/color/edit/${response.data.items[0].color_id}`);
+                        history.push(`/country/edit/${response.data.items[0].countryid}`);
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
@@ -211,14 +198,14 @@ const Color = (props) => {
                         <div className="dx-field">
                             <div className="dx-field-label">Color</div>
                             <div className="dx-field-value">
-                                <ColorBox disabled={error} onValueChanged={(e) => setCode(e.value)}
+                                <TextBox disabled={error} onValueChanged={(e) => setCode(e.value)}
                                     value={code}
                                     inputAttr={{ 'aria-label': 'Color' }}
                                 >
                                     <Validator>
                                         <RequiredRule message="Color is required" />
                                     </Validator>
-                                </ColorBox>
+                                </TextBox>
                             </div>
                         </div>
                         <div className="dx-field">
@@ -251,4 +238,4 @@ const Color = (props) => {
     );
 }
 
-export default Color;
+export default Country;

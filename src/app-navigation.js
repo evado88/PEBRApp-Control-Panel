@@ -21,16 +21,12 @@ export const navigation = [
         path: '/users'
       },
       {
-        text: 'Clients',
-        path: '/clients'
+        text: 'Peer Navigators',
+        path: '/peer-navigators'
       },
       {
-        text: 'Patients',
-        path: '/patients'
-      },
-      {
-        text: 'Events',
-        path: '/events'
+        text: 'Participants',
+        path: '/participants'
       },
       {
         text: 'Followups',

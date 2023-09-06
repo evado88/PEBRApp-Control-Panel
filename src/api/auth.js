@@ -12,40 +12,43 @@ export async function signIn(useremail, userpassword) {
 
   return new Promise(function (myResolve) {
 
-      axios({
-          method: 'post',
-          url: AppInfo.apiUrl + url,
-          data: { username: useremail, password: userpassword },
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        }).then((response) => {
+    axios({
+      method: 'post',
+      url: AppInfo.apiUrl + url,
+      data: { username: useremail, password: userpassword },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).then((response) => {
 
-          Assist.log(`Response has completed for logging in ${useremail} from server`);
+      Assist.log(`Response has completed for logging in ${useremail} from server`);
 
-          if (typeof response.data == 'string') {
+      if (typeof response.data == 'string') {
 
-              Assist.log(`Unable to process response for logging in ${useremail} from server: ${JSON.stringify(response)}`);
+        Assist.log(`Unable to process response for logging in ${useremail} from server: ${JSON.stringify(response)}`);
 
-              myResolve(new TaskResult(false, 'Unable to process server response from server', null));
+        myResolve(new TaskResult(false, 'Unable to process server response from server', null));
 
-          } else {
+      } else {
 
-              if (response.data.succeeded) {
+        if (response.data.succeeded) {
 
-                  myResolve(new TaskResult(true, '', response.data.items[0]));
+          sessionStorage.setItem('ruser', useremail);
+          myResolve(new TaskResult(true, '', response.data.items[0]));
 
-              } else {
 
-                  Assist.log(`Unable to login ${useremail}} from server: ${response.data.message}`);
-                  myResolve(new TaskResult(false, response.data.message, null));
 
-              }
-          }
-      }).catch(error => {
+        } else {
 
-          Assist.log(`An error occured when logging in ${useremail} from server: ${JSON.stringify(error)}`);
-          myResolve(new TaskResult(false, `An error occured. Please try again`, null));
+          Assist.log(`Unable to login ${useremail}} from server: ${response.data.message}`);
+          myResolve(new TaskResult(false, response.data.message, null));
 
-      });
+        }
+      }
+    }).catch(error => {
+
+      Assist.log(`An error occured when logging in ${useremail} from server: ${JSON.stringify(error)}`);
+      myResolve(new TaskResult(false, `An error occured. Please try again`, null));
+
+    });
 
   });
 
@@ -92,20 +95,13 @@ export async function createAccount(email, password) {
 }
 
 export async function changePassword(email, recoveryCode) {
-  try {
-    // Send request
-    console.log(email, recoveryCode);
 
-    return {
-      isOk: true
-    };
-  }
-  catch {
-    return {
-      isOk: false,
-      message: "Failed to change password"
-    }
-  }
+  // Send request
+
+  return {
+    isOk: true
+  };
+
 }
 
 export async function resetPassword(email) {

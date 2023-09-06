@@ -4,7 +4,6 @@ import SelectBox from 'devextreme-react/select-box';
 import { TextBox } from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
 import ValidationSummary from 'devextreme-react/validation-summary';
-import ColorBox from 'devextreme-react/color-box';
 import { LoadPanel } from 'devextreme-react/load-panel';
 import { useHistory } from "react-router-dom";
 import Toolbar, { Item } from 'devextreme-react/toolbar';
@@ -17,7 +16,7 @@ import {
 import AppInfo from '../app-info.js';
 import Assist from '../assist.js';
 
-const Color = (props) => {
+const Resource = (props) => {
 
     const history = useHistory();
 
@@ -25,10 +24,12 @@ const Color = (props) => {
     const [error, setError] = useState(false);
 
     const [name, setName] = useState('');
-    const [code, setCode] = useState('');
+    const [description, setDescription] = useState('');
+    const [url, setUrl] = useState('');
+    const [thumbnail, setThumbnail] = useState('');
     const [status, setStatus] = useState('');
 
-    const title = 'Color';
+    const title = 'Resource';
     const id = props.match.params.eid === undefined ? 0 : props.match.params.eid;
     const action = id === 0 ? 'Add' : 'Update';
     const verb = id === 0 ? 'adding' : 'Updating';
@@ -40,7 +41,7 @@ const Color = (props) => {
 
             setLoading(true);
 
-            const url = AppInfo.apiUrl + '/color/id/' + id;
+            const url = AppInfo.apiUrl + '/resource/id/' + id;
 
             Assist.log(`Starting to load ${title} from server ${url}`);
 
@@ -60,9 +61,11 @@ const Color = (props) => {
                     if (response.data.succeeded) {
                         setError(false);
 
-                        setName(response.data.items[0].color_name);
-                        setCode(response.data.items[0].color_code);
-                        setStatus(response.data.items[0].c_status);
+                        setName(response.data.items[0].resource_name);
+                        setDescription(response.data.items[0].resource_description);
+                        setUrl(response.data.items[0].resource_url);
+                        setThumbnail(response.data.items[0].resource_thumbnailUrl);
+                        setStatus(response.data.items[0].r_status);
 
                     } else {
 
@@ -94,18 +97,6 @@ const Color = (props) => {
 
         e.preventDefault();
 
-        console.log(new Date(), 'starting');
-
-        // const res = await Assist.loadData()
-        Assist.loadData().then((r) => {
-            console.log(new Date(), 'then', r);
-        }).catch((e) => {
-            console.log(new Date(), 'catch', e);
-        });
-
-        console.log(new Date(), 'ending', null);
-
-
         setLoading(true);
 
         const url = AppInfo.apiUrl + 'color/update';
@@ -113,7 +104,7 @@ const Color = (props) => {
         const fields = {
             uid: id,
             uname: name,
-            ucode: code,
+            ucode: description,
             ustatus: status === 'Active' ? 1 : 2,
             user: window.sessionStorage.getItem('ruser')
         }
@@ -139,13 +130,15 @@ const Color = (props) => {
 
                 if (response.data.succeeded) {
 
-                    setName(response.data.items[0].color_name);
-                    setCode(response.data.items[0].color_code);
-                    setStatus(response.data.items[0].c_status);
+                    setName(response.data.items[0].resource_name);
+                    setDescription(response.data.items[0].resource_description);
+                    setUrl(response.data.items[0].resource_url);
+                    setThumbnail(response.data.items[0].resource_thumbnailUrl);
+                    setStatus(response.data.items[0].r_status);
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/color/edit/${response.data.items[0].color_id}`);
+                        history.push(`/color/edit/${response.data.items[0].resource_id}`);
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
@@ -209,16 +202,42 @@ const Color = (props) => {
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Color</div>
+                            <div className="dx-field-label">Decription</div>
                             <div className="dx-field-value">
-                                <ColorBox disabled={error} onValueChanged={(e) => setCode(e.value)}
-                                    value={code}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                <TextBox disabled={error} onValueChanged={(e) => setDescription(e.value)}
+                                    value={description}
+                                    inputAttr={{ 'aria-label': 'Decription' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Decription is required" />
                                     </Validator>
-                                </ColorBox>
+                                </TextBox>
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Url</div>
+                            <div className="dx-field-value">
+                                <TextBox disabled={error} onValueChanged={(e) => setUrl(e.value)}
+                                    value={url}
+                                    inputAttr={{ 'aria-label': 'Url' }}
+                                >
+                                    <Validator>
+                                        <RequiredRule message="Url is required" />
+                                    </Validator>
+                                </TextBox>
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Thumbail</div>
+                            <div className="dx-field-value">
+                                <TextBox disabled={error} onValueChanged={(e) => setThumbnail(e.value)}
+                                    value={thumbnail}
+                                    inputAttr={{ 'aria-label': 'Thumbnail' }}
+                                >
+                                    <Validator>
+                                        <RequiredRule message="Thumbnail is required" />
+                                    </Validator>
+                                </TextBox>
                             </div>
                         </div>
                         <div className="dx-field">
@@ -251,4 +270,4 @@ const Color = (props) => {
     );
 }
 
-export default Color;
+export default Resource;

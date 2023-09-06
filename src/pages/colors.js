@@ -114,6 +114,11 @@ const Colors = () => {
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
+        <ColumnChooser
+          enabled={true}
+          mode='select'
+        >
+        </ColumnChooser>
         <Column
           dataField={'color_id'}
           caption={'ID'}
@@ -150,11 +155,6 @@ const Colors = () => {
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
-        <ColumnChooser
-          enabled={true}
-          mode='select'
-        >
-        </ColumnChooser>
       </DataGrid>
     </React.Fragment >
   )

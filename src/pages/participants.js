@@ -1,111 +1,110 @@
 import React, { useState, useEffect } from 'react';
-import axios from "axios";
 import 'devextreme/data/odata/store';
-import { Toast } from 'devextreme-react/toast';
 
 import DataGrid, {
   Column,
   Pager,
   Paging,
   FilterRow,
-  LoadPanel
+  LoadPanel,
+  ColumnChooser,
+  Editing,
 } from 'devextreme-react/data-grid';
-import appInfo from '../app-info';
+import Assist from '../assist.js';
 
-const Analytics = () => {
+const Participants = () => {
 
   const [data, setData] = useState([]);
-  const [loading, setLLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Loading data...');
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState();
 
-  const currentUrl = 'get-user-data/patients';
-  const title = 'Participants';
-
-  function showMessage(msg) {
-
-    setError(true);
-    setMessage(msg);
-
-    setTimeout(() => {
-
-      setError(false);
-      setMessage('')
-
-    }, 4000);
-
+  const pageConfig = {
+    currentUrl: 'peer-navigator/list',
+    deleteUrl: 'peer-navigator/delete',
+    single: 'peer-navigator',
+    title: 'Peer Navigators',
   }
 
 
   useEffect(() => {
 
-    console.log(new Date().toISOString(), "Starting to load data from server",
-      appInfo.apiUrl + currentUrl);
+    async function fetchData() {
 
-    // invalid url will trigger an 404 error
-    axios.get(appInfo.apiUrl + currentUrl).then((response) => {
+      Assist.loadData(pageConfig.title, pageConfig.currentUrl).then((res) => {
 
-      console.log(new Date().toISOString(), "Response has completed from server",
-        appInfo.apiUrl + currentUrl, response);
+        setData(res.Result);
+        setLoading(false);
 
-      if (typeof response.data == 'string') {
-
-        showMessage("Unable to process server response from server");
-        setLoadingText('There was a problem')
-      } else {
-
-        if (response.data.succeeded) {
-
-          setData(response.data.items);
-          setLLoading(false);
-
-          if (response.data.items.length === 0) {
-            setLoadingText('No Data')
-          } else {
-            setLoadingText('')
-          }
+        if (res.Result.length === 0) {
+          setLoadingText('No Data')
         } else {
-
-          showMessage(response.data.message);
-          setLoadingText('Unable to show information')
-
+          setLoadingText('')
         }
-      }
-    }).catch(error => {
 
-      console.log(new Date().toISOString(), "An errocooured from server", error, appInfo.apiUrl + currentUrl);
+      }).catch((ex) => {
 
-      showMessage("An error occured. Please try again");
-      setLoadingText('Could not show information')
+        Assist.showMessage(ex.Message, "warning");
+        setLoadingText('Could not show information')
 
+      });
+    }
+
+    fetchData();
+
+  }, [pageConfig.title, pageConfig.currentUrl]);
+
+
+  const deleteItem = (e) => {
+
+    Assist.deleteItem(pageConfig.title, pageConfig.deleteUrl, e.key).then((res) => {
+
+      e.cancel = false;
+      Assist.showMessage(`The ${pageConfig.single} has been successfully deleted!`);
+
+    }).catch((ex) => {
+
+      Assist.showMessage(ex.Message, "warning");
+      e.cancel = true;
     });
-  }, []);
+
+  }
 
   return (
     <React.Fragment>
-      <h2 className={'content-block'}>{title}</h2>
-      <Toast
-        visible={error}
-        message={message}
-        type={'error'}
-        displayTime={6000}
-      />
+      <h2 className={'content-block'}>{pageConfig.title}</h2>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'itemId'}
+        keyExpr={'color_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
-      >
+        onRowRemoving={deleteItem}
+        onCellPrepared={(e) => {
+
+          if (e.rowType === "data") {
+            if (e.column.dataField === "color_code") {
+              e.cellElement.style.cssText = `color: white; background-color: ${e.data.color_code}`;
+            }
+          }
+        }}>
         <Paging defaultPageSize={10} />
+        <Editing
+          mode="row"
+          allowUpdating={false}
+          allowDeleting={true}
+          allowAdding={false} />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
+        <ColumnChooser
+          enabled={true}
+          mode='select'
+        >
+        </ColumnChooser>
         <Column
           dataField={'itemId'}
           caption={'ID'}
@@ -159,4 +158,4 @@ const Analytics = () => {
   )
 };
 
-export default Analytics;
+export default Participants;
