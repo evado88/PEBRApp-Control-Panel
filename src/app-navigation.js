@@ -57,6 +57,10 @@ export const navigation = [
       {
         text: 'Discussions',
         path: '/discussions'
+      } ,
+      {
+        text: 'Notifications',
+        path: '/notifications'
       }
     ]
   }

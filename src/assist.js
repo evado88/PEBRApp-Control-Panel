@@ -5,7 +5,7 @@ import TaskResult from "./classes/taskresult.js";
 
 class Assist {
 
-   static firebaseConfig = {
+    static firebaseConfig = {
         apiKey: "AIzaSyCbH2wyJmcqTQU3gIl_raQwr0AmVuG_bhA",
         authDomain: "myzambia-5c62c.firebaseapp.com",
         databaseURL: "https://myzambia-5c62c.firebaseio.com",
@@ -13,7 +13,7 @@ class Assist {
         storageBucket: "myzambia-5c62c.appspot.com",
         messagingSenderId: "878075714362",
         appId: "1:878075714362:web:55575ac3647ff7d3cd0e03"
-      };
+    };
 
     ///Logs a message to the console
     static log(message, type = 'log') {
@@ -112,7 +112,7 @@ class Assist {
                 url: AppInfo.apiUrl + url,
                 data: { uid: key },
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-              }).then((response) => {
+            }).then((response) => {
 
                 Assist.log(`Response has completed for deleting ${title} from server`);
 
@@ -139,6 +139,48 @@ class Assist {
 
                 Assist.log(`An error occured when deleting ${title} from server: ${JSON.stringify(error)}`);
                 myReject(new TaskResult(false, `An error occured when deleting ${title} from server`, null));
+
+            });
+
+        });
+
+
+
+    }
+
+    /**Sends a message to all devices with the specified title and body
+    * @param {string} utitle The title of the notification
+    * @param {string} ubody The body for the notification
+    * @param {string} utopic The topic of the message
+    * @returns TaskResult
+    */
+    static async sendTopicMessage(utitle, ubody, utopic = 'Twyshe') {
+
+        const url = 'send-fcm-topic-message';
+
+        Assist.log(`Starting to send notiofication with ${utitle} with topic {topic} from server using url ${AppInfo.apiUrl + url}`, 'log');
+
+        return new Promise(function (myResolve) {
+
+            axios({
+                method: 'post',
+                url: AppInfo.apiUrl + url,
+                data: {
+                    topic: utopic,
+                    title: utitle,
+                    body: ubody
+                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).then((response) => {
+
+                Assist.log(`Response has completed for sending notification ${utitle} from server`);
+
+                myResolve(new TaskResult(true, 'The notification has been sent successfully!', response.data.items));
+
+            }).catch(error => {
+
+                Assist.log(`An error occured when sending notification ${utitle} from server: ${JSON.stringify(error)}`);
+                myResolve(new TaskResult(false, `An error occured when sending notification ${utitle} from server`, null));
 
             });
 

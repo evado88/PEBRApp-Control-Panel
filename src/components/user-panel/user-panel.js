@@ -35,7 +35,7 @@ function UserPanel({ menuMode }) {
         <div className={'image-container'}>
           <div
             style={{
-              background: `url('https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/employees/06.png') no-repeat #fff`,
+              background: `url(${user.avatarUrl}) no-repeat #fff`,
               backgroundSize: 'cover'
             }}
             className={'user-image'} />

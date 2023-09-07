@@ -139,7 +139,7 @@ const Country = (props) => {
 
                 } else {
 
-                    Assist.showMessage(response.data.message, 'danger');
+                    Assist.showMessage(response.data.message, 'error');
                     setError(true);
                 }
             }
@@ -149,7 +149,7 @@ const Country = (props) => {
             setLoading(false);
 
             Assist.log(`An error occoured when ${verb} ${title.toLowerCase()} on server: ${error}`);
-            Assist.showMessage(`An error occured when ${verb} ${title.toLowerCase()}. Please try again`);
+            Assist.showMessage(`An error occured when ${verb} ${title.toLowerCase()}. Please try again`, 'error');
 
         });
     }

@@ -17,7 +17,7 @@ import {
 import AppInfo from '../app-info.js';
 import Assist from '../assist.js';
 
-const Discussion = (props) => {
+const Post = (props) => {
 
 
     // Your web app's Firebase configuration
@@ -29,11 +29,10 @@ const Discussion = (props) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
-    const [utitle, setTitle] = useState('');
-    const [udescription, setDescription] = useState('');
-    const [ustatus, setStatus] = useState('');
+    const [utext, setText] = useState('');
+    const [ustate, setState] = useState('');
 
-    const pageTitle = 'Discussion';
+    const pageTitle = 'Post';
     const id = props.match.params.eid === undefined ? 0 : props.match.params.eid;
     const action = id === 0 ? 'Add' : 'Update';
     const verb = id === 0 ? 'adding' : 'Updating';
@@ -50,22 +49,21 @@ const Discussion = (props) => {
             // invalid url will trigger an 404 error
             const db = getFirestore(app);
 
-            const docRef = doc(db, 'twyshe-discussions', id);
+            const docRef = doc(db, 'twyshe-discussion-posts', id);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 setLoading(false);
 
-                const item = { id: docSnap.id, statusName: docSnap.data().status === 1 ? 'Active' : 'Disabled', ...docSnap.data() };
+                const item = { docId: docSnap.id, statusName: docSnap.data().state === 1 ? 'Active' : 'Disabled', ...docSnap.data() };
 
-                setTitle(item.title);
-                setDescription(item.description);
-                setStatus(item.statusName);
+                setText(item.text);
+                setState(item.statusName);
 
             } else {
 
                 console.log('No such document!');
-                Assist.showMessage(`Unable to find a discussion with the specified ID '${id}'`);
+                Assist.showMessage(`Unable to find a discussion with the specified ID '${id}'`, 'error');
             }
 
         }
@@ -89,11 +87,10 @@ const Discussion = (props) => {
         // invalid url will trigger an 404 error
         const db = getFirestore(app);
 
-        const docRef = doc(db, 'twyshe-discussions', id);
+        const docRef = doc(db, 'twyshe-discussion-posts', id);
         await updateDoc(docRef, {
-            title: utitle,
-            description: udescription,
-            status: ustatus === 'Active' ? 1 : 2,
+            text: utext,
+            state: ustate === 'Active' ? 1 : 2,
 
         }).then((value) => {
             Assist.showMessage(`The ${pageTitle.toLowerCase()} has been successfully updated!`, 'success');
@@ -101,7 +98,7 @@ const Discussion = (props) => {
             setError(true);
 
             Assist.log(`An error occoured when ${verb} ${pageTitle.toLowerCase()}: ${error}`);
-            Assist.showMessage(`An error occured when ${verb} ${pageTitle.toLowerCase()}. Please try again`, 'error');
+            Assist.showMessage(`An error occured when ${verb} ${pageTitle.toLowerCase()}. Please try again`, 'error', 'error');
         }).finally(() => {
             setLoading(false);
         });
@@ -139,25 +136,12 @@ const Discussion = (props) => {
                         <div className="dx-fieldset-header">Properties</div>
 
                         <div className="dx-field">
-                            <div className="dx-field-label">Name</div>
+                            <div className="dx-field-label">Text</div>
                             <div className="dx-field-value">
-                                <TextBox validationMessagePosition="left" onValueChanged={(e) => setTitle(e.value)}
-                                    inputAttr={{ 'aria-label': 'Name' }} value={utitle} disabled={error}>
+                                <TextBox validationMessagePosition="left" onValueChanged={(e) => setText(e.value)}
+                                    inputAttr={{ 'aria-label': 'Text' }} value={utext} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="Name is required" />
-                                    </Validator>
-                                </TextBox>
-                            </div>
-                        </div>
-                        <div className="dx-field">
-                            <div className="dx-field-label">Color</div>
-                            <div className="dx-field-value">
-                                <TextBox disabled={error} onValueChanged={(e) => setDescription(e.value)}
-                                    value={udescription}
-                                    inputAttr={{ 'aria-label': 'Color' }}
-                                >
-                                    <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Textis required" />
                                     </Validator>
                                 </TextBox>
                             </div>
@@ -165,8 +149,8 @@ const Discussion = (props) => {
                         <div className="dx-field">
                             <div className="dx-field-label">Status</div>
                             <div className="dx-field-value">
-                                <SelectBox dataSource={AppInfo.statusList} onValueChanged={(e) => setStatus(e.value)}
-                                    validationMessagePosition="left" value={ustatus} disabled={error}>
+                                <SelectBox dataSource={AppInfo.statusList} onValueChanged={(e) => setState(e.value)}
+                                    validationMessagePosition="left" value={ustate} disabled={error}>
                                     <Validator>
                                         <RequiredRule message="Status is required" />
                                     </Validator>
@@ -192,4 +176,4 @@ const Discussion = (props) => {
     );
 }
 
-export default Discussion;
+export default Post;

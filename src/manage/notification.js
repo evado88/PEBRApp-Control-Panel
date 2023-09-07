@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import SelectBox from 'devextreme-react/select-box';
 import { TextBox } from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
 import ValidationSummary from 'devextreme-react/validation-summary';
-import ColorBox from 'devextreme-react/color-box';
 import { LoadPanel } from 'devextreme-react/load-panel';
 import { useHistory } from "react-router-dom";
 import Toolbar, { Item } from 'devextreme-react/toolbar';
@@ -17,18 +15,19 @@ import {
 import AppInfo from '../app-info.js';
 import Assist from '../assist.js';
 
-const Color = (props) => {
+const Notification = (props) => {
 
     const history = useHistory();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
-    const [name, setName] = useState('');
-    const [code, setCode] = useState('');
-    const [status, setStatus] = useState('');
+    const [type, setType] = useState('');
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
+    const [description, setDescription] = useState('');
 
-    const title = 'Color';
+    const pageTitle = 'Notification';
     const id = props.match.params.eid === undefined ? 0 : props.match.params.eid;
     const action = id === 0 ? 'Add' : 'Update';
     const verb = id === 0 ? 'adding' : 'Updating';
@@ -40,14 +39,14 @@ const Color = (props) => {
 
             setLoading(true);
 
-            const url = AppInfo.apiUrl + '/color/id/' + id;
+            const url = AppInfo.apiUrl + 'notification/id/' + id;
 
-            Assist.log(`Starting to load ${title} from server ${url}`);
+            Assist.log(`Starting to load ${pageTitle} from server ${url}`);
 
             // invalid url will trigger an 404 error
             axios.get(url).then((response) => {
 
-                Assist.log(`Response for loading ${title} has completed from server`);
+                Assist.log(`Response for loading ${pageTitle} has completed from server`);
                 setLoading(false);
 
                 if (typeof response.data == 'string') {
@@ -60,10 +59,10 @@ const Color = (props) => {
                     if (response.data.succeeded) {
                         setError(false);
 
-                        setName(response.data.items[0].color_name);
-                        setCode(response.data.items[0].color_code);
-                        setStatus(response.data.items[0].c_status);
-
+                        setType(response.data.items[0].notification_type);
+                        setTitle(response.data.items[0].notification_title);
+                        setBody(response.data.items[0].notification_body);
+                        setDescription(response.data.items[0].notification_description);
                     } else {
 
                         Assist.showMessage(response.data.message);
@@ -75,8 +74,8 @@ const Color = (props) => {
                 setLoading(false);
                 setError(true);
 
-                Assist.log(`An errocooured when loading ${title} from server: ${error}`);
-                Assist.showMessage(`An error occured when loading ${title} from server`);
+                Assist.log(`An errocooured when loading ${pageTitle} from server: ${error}`);
+                Assist.showMessage(`An error occured when loading ${pageTitle} from server`);
 
 
             });
@@ -94,31 +93,20 @@ const Color = (props) => {
 
         e.preventDefault();
 
-        console.log(new Date(), 'starting');
-
-        // const res = await Assist.loadData()
-        Assist.loadData().then((r) => {
-            console.log(new Date(), 'then', r);
-        }).catch((e) => {
-            console.log(new Date(), 'catch', e);
-        });
-
-        console.log(new Date(), 'ending', null);
-
-
         setLoading(true);
 
-        const url = AppInfo.apiUrl + 'color/update';
+        const url = AppInfo.apiUrl + 'notification/update';
 
         const fields = {
             uid: id,
-            uname: name,
-            ucode: code,
-            ustatus: status === 'Active' ? 1 : 2,
+            utype: type,
+            utitle: title,
+            ubody: body,
+            udescription: description,
             user: window.sessionStorage.getItem('ruser')
         }
 
-        Assist.log(`Starting to ${verb} ${title} on server ${url}`);
+        Assist.log(`Starting to ${verb} ${pageTitle} on server ${url}`);
 
         axios({
             method: 'post',
@@ -127,28 +115,41 @@ const Color = (props) => {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then((response) => {
 
-            Assist.log(`Response for ${verb} ${title} has completed on server`);
+            Assist.log(`Response for ${verb} ${pageTitle} has completed on server`);
 
             setLoading(false);
 
             if (typeof response.data == 'string') {
 
-                Assist.showMessage(`Unable to process server response for ${verb} ${title} from server`);
+                Assist.showMessage(`Unable to process server response for ${verb} ${pageTitle} from server`);
 
             } else {
 
                 if (response.data.succeeded) {
 
-                    setName(response.data.items[0].color_name);
-                    setCode(response.data.items[0].color_code);
-                    setStatus(response.data.items[0].c_status);
+
+                    setType(response.data.items[0].notification_type);
+                    setTitle(response.data.items[0].notification_title);
+                    setBody(response.data.items[0].notification_body);
+                    setDescription(response.data.items[0].notification_description);
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/color/edit/${response.data.items[0].color_id}`);
+
+                        Assist.sendTopicMessage(title, body).then((res) => {
+
+                            Assist.log(res.Message, "info");
+
+                        }).catch((x) => {
+                            Assist.showMessage(x.Message, "error");
+                        }).finally(() => {
+                            history.push(`/notification/edit/${response.data.items[0].notification_id}`);
+                        })
+
+
                     }
 
-                    Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
+                    Assist.showMessage(`The ${pageTitle.toLowerCase()} has been successfully saved!`, 'success');
 
                 } else {
 
@@ -161,8 +162,8 @@ const Color = (props) => {
 
             setLoading(false);
 
-            Assist.log(`An error occoured when ${verb} ${title.toLowerCase()} on server: ${error}`);
-            Assist.showMessage(`An error occured when ${verb} ${title.toLowerCase()}. Please try again`, 'error');
+            Assist.log(`An error occoured when ${verb} ${pageTitle.toLowerCase()} on server: ${error}`);
+            Assist.showMessage(`An error occured when ${verb} ${pageTitle.toLowerCase()}. Please try again`, 'error');
 
         });
     }
@@ -170,7 +171,7 @@ const Color = (props) => {
 
     return (
         <React.Fragment>
-            <h2 className={'content-block'}>{action} {title}</h2>
+            <h2 className={'content-block'}>{action} {pageTitle}</h2>
             <LoadPanel
                 shadingColor="rgba(0,0,0,0.4)"
                 position={{ of: '#currentForm' }}
@@ -198,38 +199,53 @@ const Color = (props) => {
                         <div className="dx-fieldset-header">Properties</div>
 
                         <div className="dx-field">
-                            <div className="dx-field-label">Name</div>
+                            <div className="dx-field-label">Type</div>
                             <div className="dx-field-value">
-                                <TextBox validationMessagePosition="left" onValueChanged={(e) => setName(e.value)}
-                                    inputAttr={{ 'aria-label': 'Name' }} value={name} disabled={error}>
+                                <TextBox validationMessagePosition="left" onValueChanged={(e) => setType(e.value)}
+                                    inputAttr={{ 'aria-label': 'Type' }} value={type} disabled={error}>
                                     <Validator>
-                                        <RequiredRule message="Name is required" />
+                                        <RequiredRule message="Type is required" />
                                     </Validator>
                                 </TextBox>
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Color</div>
+                            <div className="dx-field-label">Title</div>
                             <div className="dx-field-value">
-                                <ColorBox disabled={error} onValueChanged={(e) => setCode(e.value)}
-                                    value={code}
-                                    inputAttr={{ 'aria-label': 'Color' }}
+                                <TextBox disabled={error} onValueChanged={(e) => setTitle(e.value)}
+                                    value={title}
+                                    inputAttr={{ 'aria-label': 'Title' }}
                                 >
                                     <Validator>
-                                        <RequiredRule message="Color is required" />
+                                        <RequiredRule message="Title is required" />
                                     </Validator>
-                                </ColorBox>
+                                </TextBox>
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Status</div>
+                            <div className="dx-field-label">Body</div>
                             <div className="dx-field-value">
-                                <SelectBox dataSource={AppInfo.statusList} onValueChanged={(e) => setStatus(e.value)}
-                                    validationMessagePosition="left" value={status} disabled={error}>
+                                <TextBox disabled={error} onValueChanged={(e) => setBody(e.value)}
+                                    value={body}
+                                    inputAttr={{ 'aria-label': 'Body' }}
+                                >
                                     <Validator>
-                                        <RequiredRule message="Status is required" />
+                                        <RequiredRule message="Body is required" />
                                     </Validator>
-                                </SelectBox>
+                                </TextBox>
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Description</div>
+                            <div className="dx-field-value">
+                                <TextBox disabled={error} onValueChanged={(e) => setDescription(e.value)}
+                                    value={description}
+                                    inputAttr={{ 'aria-label': 'Description' }}
+                                >
+                                    <Validator>
+                                        <RequiredRule message="Description is required" />
+                                    </Validator>
+                                </TextBox>
                             </div>
                         </div>
                     </div>
@@ -251,4 +267,4 @@ const Color = (props) => {
     );
 }
 
-export default Color;
+export default Notification;

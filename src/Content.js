@@ -7,7 +7,7 @@ import { Footer } from './components';
 
 export default function Content() {
   return (
-    <SideNavBarLayout title={appInfo.title}>
+    <SideNavBarLayout title={appInfo.appName}>
       <Switch>
         {routes.map(({ path, component }) => (
           <Route
@@ -20,10 +20,7 @@ export default function Content() {
         <Redirect to={'/home'} />
       </Switch>
       <Footer>
-        Copyright © 2011-{new Date().getFullYear()} {appInfo.title} Inc.
-        <br />
-        All trademarks or registered trademarks are property of their
-        respective owners.
+      Copyright © 2022-{new Date().getFullYear()}. All rights reserved.
       </Footer>
     </SideNavBarLayout>
   );

@@ -43,7 +43,7 @@ const Participants = () => {
 
       }).catch((ex) => {
 
-        Assist.showMessage(ex.Message, "warning");
+        Assist.showMessage(ex.Message, "error");
         setLoadingText('Could not show information')
 
       });
@@ -63,7 +63,7 @@ const Participants = () => {
 
     }).catch((ex) => {
 
-      Assist.showMessage(ex.Message, "warning");
+      Assist.showMessage(ex.Message, "error");
       e.cancel = true;
     });
 

@@ -46,7 +46,7 @@ const Colors = () => {
 
       }).catch((ex) => {
 
-        Assist.showMessage(ex.Message, "warning");
+        Assist.showMessage(ex.Message, "error");
         setLoadingText('Could not show information')
 
       });
@@ -66,7 +66,7 @@ const Colors = () => {
 
     }).catch((ex) => {
 
-      Assist.showMessage(ex.Message, "warning");
+      Assist.showMessage(ex.Message, "error");
       e.cancel = true;
     });
 

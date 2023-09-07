@@ -17,6 +17,11 @@
         "command": "rm -rf node_modules then npm install",
         "description": "Allows you to fix error 'Error: Cannot find module 'faye''",
         "usage": "NA"
+      },
+      {
+        "command": "npm run build",
+        "description": "Create a distribution version of the app",
+        "usage": "NA"
       }
   ]
 }

@@ -1,8 +1,9 @@
 import { withNavigationWatcher } from './contexts/navigation';
 
 import {
-  HomePage, UsersPage, UserPage, PeerNavigatorsPage , ProfilePage, AnalyticsPage, FollowupsPage, PatientsPage, FacilitiesPage, ResourcesPage,
-  CountriesPage, ColorsPage, ColorPage, DiscussionsPage, FacilityPage, ResourcePage, CountryPage, DiscussionPage
+  HomePage, UsersPage, UserPage, PeerNavigatorsPage, ProfilePage, AnalyticsPage, FollowupsPage, PatientsPage, FacilitiesPage, ResourcesPage,
+  CountriesPage, ColorsPage, ColorPage, DiscussionsPage, FacilityPage, ResourcePage, CountryPage, DiscussionPage, ForumPage,
+   PostPage, NotificationPage, NotificationsPage
 } from './pages';
 
 const routes = [
@@ -12,7 +13,7 @@ const routes = [
   },
   {
     path: '/peer-navigators',
-    component: PeerNavigatorsPage 
+    component: PeerNavigatorsPage
   },
   {
     path: '/participants',
@@ -49,6 +50,10 @@ const routes = [
   {
     path: '/discussions',
     component: DiscussionsPage
+  },
+  {
+    path: '/notifications',
+    component: NotificationsPage
   },
   {
     path: '/home',
@@ -99,8 +104,22 @@ const routes = [
     component: ColorPage
   },
   {
+    path: '/notification/add',
+    component: NotificationPage
+  },
+  {
+    path: '/notification/edit/:eid',
+    component: NotificationPage
+  },
+  {
     path: '/discussion/edit/:eid',
     component: DiscussionPage
+  }, {
+    path: '/discussion/chat/:eid',
+    component: ForumPage
+  }, {
+    path: '/discussion/post/edit/:eid',
+    component: PostPage
   },
 ];
 

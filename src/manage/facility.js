@@ -203,14 +203,24 @@ const Facility = (props) => {
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/facility/edit/${response.data.items[0].facility_id}`);
+
+                        Assist.sendTopicMessage(`New facility has been posted`, name).then((res) => {
+
+                            Assist.log(res.Message, "info");
+
+                        }).catch((x) => {
+                            Assist.showMessage(x.Message, "error");
+                        }).finally(() => {
+                            history.push(`/facility/edit/${response.data.items[0].facility_id}`);
+                        })
+                 
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
 
                 } else {
 
-                    Assist.showMessage(response.data.message, 'danger');
+                    Assist.showMessage(response.data.message, 'error');
                     setError(true);
                 }
             }
@@ -220,7 +230,7 @@ const Facility = (props) => {
             setLoading(false);
 
             Assist.log(`An error occoured when ${verb} ${title.toLowerCase()} on server: ${error}`);
-            Assist.showMessage(`An error occured when ${verb} ${title.toLowerCase()}. Please try again`);
+            Assist.showMessage(`An error occured when ${verb} ${title.toLowerCase()}. Please try again`, 'error');
 
         });
     }
@@ -398,19 +408,7 @@ const Facility = (props) => {
                                 </SelectBox>
                             </div>
                         </div>
-                        <div className="dx-field">
-                            <div className="dx-field-label">Longitude</div>
-                            <div className="dx-field-value">
-                                <NumberBox disabled={error} onValueChanged={(e) => setLon(e.value)}
-                                    value={lon}
-                                    inputAttr={{ 'aria-label': 'Longitude' }}
-                                >
-                                    <Validator>
-                                        <RequiredRule message="Longitude is required" />
-                                    </Validator>
-                                </NumberBox>
-                            </div>
-                        </div>
+                      
                         <div className="dx-field">
                             <div className="dx-field-label">Latitude</div>
                             <div className="dx-field-value">
@@ -424,7 +422,19 @@ const Facility = (props) => {
                                 </NumberBox>
                             </div>
                         </div>
-
+                        <div className="dx-field">
+                            <div className="dx-field-label">Longitude</div>
+                            <div className="dx-field-value">
+                                <NumberBox disabled={error} onValueChanged={(e) => setLon(e.value)}
+                                    value={lon}
+                                    inputAttr={{ 'aria-label': 'Longitude' }}
+                                >
+                                    <Validator>
+                                        <RequiredRule message="Longitude is required" />
+                                    </Validator>
+                                </NumberBox>
+                            </div>
+                        </div>
 
                         <div className="dx-field">
                             <div className="dx-field-label">Thumbnail</div>

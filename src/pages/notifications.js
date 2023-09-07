@@ -14,7 +14,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
 
-const Countries = () => {
+const Notifications = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,10 +23,10 @@ const Countries = () => {
   const history = useHistory();
 
   const pageConfig = {
-    currentUrl: 'country/list',
-    deleteUrl: 'country/delete',
-    single: 'Country',
-    title: 'Countries',
+    currentUrl: 'notification/list',
+    deleteUrl: 'notification/delete',
+    single: 'Notification',
+    title: 'Notifications',
   }
 
 
@@ -83,14 +83,14 @@ const Countries = () => {
           options={{
             icon: 'plus',
             onClick: () => {
-              history.push('/country/add');
+              history.push('/notification/add');
             },
           }} />
       </Toolbar>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'country_id'}
+        keyExpr={'notification_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -121,35 +121,41 @@ const Countries = () => {
         >
         </ColumnChooser>
         <Column
-          dataField={'country_id'}
+          dataField={'notification_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'country_name'}
-          caption={'Name'}
+          dataField={'notification_type'}
+          caption={'Type'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'notification_title'}
+          caption={'Title'}
           hidingPriority={8}
           cellRender={(e) => {
-            return <a href={`#/country/edit/${e.data.country_id}`}>{e.data.country_name}</a>;
+            return <a href={`#/notification/edit/${e.data.notification_id}`}>{e.data.notification_title}</a>;
           }}
         />
+
         <Column
-          dataField={'country_code'}
-          caption={'Code'}
+          dataField={'notification_body'}
+          caption={'Body'}
           hidingPriority={8}
         />
         <Column
-          dataField={'c_status'}
-          caption={'Status'}
+          dataField={'notification_description'}
+          caption={'Description'}
           hidingPriority={8}
         />
         <Column
-          dataField={'country_createuser'}
+          dataField={'notification_createuser'}
           caption={'User'}
           hidingPriority={6}
         />
         <Column
-          dataField={'country_createdate'}
+          dataField={'notification_createdate'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
@@ -161,4 +167,4 @@ const Countries = () => {
   )
 };
 
-export default Countries;
+export default Notifications;

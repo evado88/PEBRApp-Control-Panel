@@ -140,14 +140,24 @@ const Resource = (props) => {
 
                     //check if user was adding and redirect
                     if (id === 0) {
-                        history.push(`/resource/edit/${response.data.items[0].resource_id}`);
+
+                        Assist.sendTopicMessage(`New resource has been posted`, name).then((res) => {
+
+                            Assist.log(res.Message, "info");
+
+                        }).catch((x) => {
+                            Assist.showMessage(x.Message, "error");
+                        }).finally(() => {
+                            history.push(`/resource/edit/${response.data.items[0].resource_id}`);
+                        })
+
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
 
                 } else {
 
-                    Assist.showMessage(response.data.message, 'danger');
+                    Assist.showMessage(response.data.message, 'error');
                     setError(true);
                 }
             }
@@ -157,7 +167,7 @@ const Resource = (props) => {
             setLoading(false);
 
             Assist.log(`An error occoured when ${verb} ${title.toLowerCase()} on server: ${error}`);
-            Assist.showMessage(`An error occured when ${verb} ${title.toLowerCase()}. Please try again`);
+            Assist.showMessage(`An error occured when ${verb} ${title.toLowerCase()}. Please try again`, 'error');
 
         });
     }
