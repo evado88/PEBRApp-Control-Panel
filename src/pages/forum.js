@@ -102,8 +102,8 @@ const Forum = (props) => {
       >
         <Editing
           mode="row"
-          allowUpdating={true}
-          allowDeleting={true}
+          allowUpdating={false}
+          allowDeleting={false}
           allowAdding={false} />
         <Paging defaultPageSize={10} />
         <Pager showPageSizeSelector={true} showInfo={true} />
