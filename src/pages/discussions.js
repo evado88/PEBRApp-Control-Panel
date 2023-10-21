@@ -69,6 +69,16 @@ const Discussions = () => {
 
     loadData();
 
+     //audit
+     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Forum', 'View', '').then((res) => {
+
+      Assist.log(res.Message, "info");
+
+    }).catch((x) => {
+
+      Assist.log(x.Message, "warn");
+    });
+
   }, [app]);
 
   return (

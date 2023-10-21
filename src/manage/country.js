@@ -86,7 +86,17 @@ const Country = (props) => {
             loadData();
         }
 
-    }, [id]);
+           //audit
+           Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Country', verb, id).then((res) => {
+
+            Assist.log(res.Message, "info");
+
+        }).catch((x) => {
+
+            Assist.log(x.Message, "warn");
+        });
+
+    }, [id, verb]);
 
 
     const onFormSubmit = async (e) => {

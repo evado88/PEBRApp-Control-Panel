@@ -51,6 +51,16 @@ const Followups = () => {
 
     fetchData();
 
+     //audit
+     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Follow-ups', 'View', '').then((res) => {
+
+      Assist.log(res.Message, "info");
+
+    }).catch((x) => {
+
+      Assist.log(x.Message, "warn");
+    });
+
   }, [pageConfig.title, pageConfig.currentUrl]);
 
 

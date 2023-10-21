@@ -51,6 +51,16 @@ const PeerNavigators = () => {
 
     fetchData();
 
+     //audit
+     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Peer Navigators', 'View', '').then((res) => {
+
+      Assist.log(res.Message, "info");
+
+    }).catch((x) => {
+
+      Assist.log(x.Message, "warn");
+    });
+
   }, [pageConfig.title, pageConfig.currentUrl]);
 
 

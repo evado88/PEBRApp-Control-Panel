@@ -75,7 +75,17 @@ const Discussion = (props) => {
             loadData();
         }
 
-    }, [id, app]);
+            //audit
+            Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Discussion', verb, id).then((res) => {
+
+                Assist.log(res.Message, "info");
+    
+            }).catch((x) => {
+    
+                Assist.log(x.Message, "warn");
+            });
+
+    }, [id, app, verb]);
 
 
     const onFormSubmit = async (e) => {

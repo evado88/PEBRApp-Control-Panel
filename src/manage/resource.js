@@ -7,6 +7,7 @@ import ValidationSummary from 'devextreme-react/validation-summary';
 import { LoadPanel } from 'devextreme-react/load-panel';
 import { useHistory } from "react-router-dom";
 import Toolbar, { Item } from 'devextreme-react/toolbar';
+import FileUploader from 'devextreme-react/file-uploader';
 
 import {
     Validator,
@@ -25,8 +26,8 @@ const Resource = (props) => {
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [url, setUrl] = useState('');
-    const [thumbnail, setThumbnail] = useState('');
+    const [resourceUrl, setResourceUrl] = useState('');
+    const [thumbnail, setThumbnail] = useState(AppInfo.noImageUrl);
     const [status, setStatus] = useState('');
 
     const title = 'Resource';
@@ -63,7 +64,7 @@ const Resource = (props) => {
 
                         setName(response.data.items[0].resource_name);
                         setDescription(response.data.items[0].resource_description);
-                        setUrl(response.data.items[0].resource_url);
+                        setResourceUrl(response.data.items[0].resource_url);
                         setThumbnail(response.data.items[0].resource_thumbnailUrl);
                         setStatus(response.data.items[0].r_status);
 
@@ -90,7 +91,17 @@ const Resource = (props) => {
             loadData();
         }
 
-    }, [id]);
+        //audit
+        Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Resource', verb, id).then((res) => {
+
+            Assist.log(res.Message, "info");
+
+        }).catch((x) => {
+
+            Assist.log(x.Message, "warn");
+        });
+
+    }, [id, verb]);
 
 
     const onFormSubmit = async (e) => {
@@ -105,7 +116,7 @@ const Resource = (props) => {
             uid: id,
             uname: name,
             udescription: description,
-            uurl: url,
+            uurl: resourceUrl,
             uthumbnail: thumbnail,
             ustatus: status === 'Active' ? 1 : 2,
             user: window.sessionStorage.getItem('ruser')
@@ -134,7 +145,7 @@ const Resource = (props) => {
 
                     setName(response.data.items[0].resource_name);
                     setDescription(response.data.items[0].resource_description);
-                    setUrl(response.data.items[0].resource_url);
+                    setResourceUrl(response.data.items[0].resource_url);
                     setThumbnail(response.data.items[0].resource_thumbnailUrl);
                     setStatus(response.data.items[0].r_status);
 
@@ -227,29 +238,61 @@ const Resource = (props) => {
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Url</div>
+                            <div className="dx-field-label">Attachment</div>
                             <div className="dx-field-value">
-                                <TextBox disabled={error} onValueChanged={(e) => setUrl(e.value)}
-                                    value={url}
-                                    inputAttr={{ 'aria-label': 'Url' }}
-                                >
-                                    <Validator>
-                                        <RequiredRule message="Url is required" />
-                                    </Validator>
-                                </TextBox>
+
+                                {resourceUrl === '' && <h6>No file attached</h6>}
+                                {resourceUrl !== '' && <Button
+                                    width={250}
+                                    text="View Attachment"
+                                    type="danger"
+                                    stylingMode="outlined" onClick={(e) => {
+                                        const win = window.open(resourceUrl, '_blank');
+                                        win.focus();
+
+                                    }} />}
                             </div>
                         </div>
                         <div className="dx-field">
-                            <div className="dx-field-label">Thumbail</div>
+                            <div className="dx-field-label">Choose Attachment</div>
                             <div className="dx-field-value">
-                                <TextBox disabled={error} onValueChanged={(e) => setThumbnail(e.value)}
-                                    value={thumbnail}
-                                    inputAttr={{ 'aria-label': 'Thumbnail' }}
-                                >
-                                    <Validator>
-                                        <RequiredRule message="Thumbnail is required" />
-                                    </Validator>
-                                </TextBox>
+                                <FileUploader
+                                    multiple={false}
+                                    accept='*'
+                                    name='file'
+                                    uploadMode='instantly'
+                                    onUploaded={(e) => {
+                                        const result = Assist.processFileUpload(e);
+
+                                        if (result.Succeeded) {
+                                            setResourceUrl(result.Result);
+                                        }
+                                    }}
+                                    uploadUrl={`${AppInfo.uploadUrl}${'Resource'}`} />
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Thumbnail</div>
+                            <div className="dx-field-value">
+                                <img src={thumbnail} style={{ width: '160px', height: 'auto' }} alt='Resource Thumbnail' />
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Choose thumbail</div>
+                            <div className="dx-field-value">
+                                <FileUploader
+                                    multiple={false}
+                                    accept='image/*'
+                                    name='file'
+                                    uploadMode='instantly'
+                                    onUploaded={(e) => {
+                                        const result = Assist.processFileUpload(e);
+
+                                        if (result.Succeeded) {
+                                            setThumbnail(result.Result);
+                                        }
+                                    }}
+                                    uploadUrl={`${AppInfo.uploadUrl}${'Resource'}`} />
                             </div>
                         </div>
                         <div className="dx-field">

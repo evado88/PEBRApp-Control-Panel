@@ -12,6 +12,7 @@ import LoadIndicator from 'devextreme-react/load-indicator';
 import notify from 'devextreme/ui/notify';
 import './login-form.scss';
 import { useAuth } from '../../contexts/auth';
+import Assist from '../../assist.js';
 
 function Login() {
 
@@ -34,6 +35,19 @@ function Login() {
     if (!res.Succeeded) {
 
       notify(res.Message, 'error', 2000);
+
+    } else {
+
+      //record the login
+      Assist.addLogin(email, 'Web').then((res) => {
+
+        Assist.log(res.Message, "info");
+
+      }).catch((x) => {
+        
+        Assist.log(x.Message, "warn");
+      });
+
     }
 
   }, [signIn]);

@@ -8,6 +8,7 @@ import ValidationSummary from 'devextreme-react/validation-summary';
 import { LoadPanel } from 'devextreme-react/load-panel';
 import { useHistory } from "react-router-dom";
 import Toolbar, { Item } from 'devextreme-react/toolbar';
+import FileUploader from 'devextreme-react/file-uploader';
 
 import {
     Validator,
@@ -43,7 +44,7 @@ const Facility = (props) => {
     const [lat, setLat] = useState('');
     const [lon, setLon] = useState('');
 
-    const [thumbnail, setThumbnail] = useState('');
+    const [thumbnail, setThumbnail] = useState(AppInfo.noImageUrl);
 
     const [status, setStatus] = useState('');
 
@@ -124,7 +125,17 @@ const Facility = (props) => {
             loadData();
         }
 
-    }, [id]);
+        //audit
+        Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Facility', verb, id).then((res) => {
+
+            Assist.log(res.Message, "info");
+
+        }).catch((x) => {
+
+            Assist.log(x.Message, "warn");
+        });
+
+    }, [id, verb]);
 
 
     const onFormSubmit = async (e) => {
@@ -213,7 +224,7 @@ const Facility = (props) => {
                         }).finally(() => {
                             history.push(`/facility/edit/${response.data.items[0].facility_id}`);
                         })
-                 
+
                     }
 
                     Assist.showMessage(`The ${title.toLowerCase()} has been successfully saved!`, 'success');
@@ -316,7 +327,7 @@ const Facility = (props) => {
                                     value={email}
                                     inputAttr={{ 'aria-label': 'Email' }}
                                 >
-                                        <Validator>
+                                    <Validator>
                                         <EmailRule message="Please enter a valid email address" />
                                     </Validator>
                                 </TextBox>
@@ -408,7 +419,7 @@ const Facility = (props) => {
                                 </SelectBox>
                             </div>
                         </div>
-                      
+
                         <div className="dx-field">
                             <div className="dx-field-label">Latitude</div>
                             <div className="dx-field-value">
@@ -435,18 +446,28 @@ const Facility = (props) => {
                                 </NumberBox>
                             </div>
                         </div>
-
                         <div className="dx-field">
                             <div className="dx-field-label">Thumbnail</div>
                             <div className="dx-field-value">
-                                <TextBox disabled={error} onValueChanged={(e) => setThumbnail(e.value)}
-                                    value={thumbnail}
-                                    inputAttr={{ 'aria-label': 'Thumbnail' }}
-                                >
-                                    <Validator>
-                                        <RequiredRule message="Thumbnail is required" />
-                                    </Validator>
-                                </TextBox>
+                            <img src={thumbnail} style={{ width: '160px', height: 'auto' }} alt='Facility Thumbnail' />
+                            </div>
+                        </div>
+                        <div className="dx-field">
+                            <div className="dx-field-label">Choose thumbail</div>
+                            <div className="dx-field-value">
+                                <FileUploader
+                                    multiple={false}
+                                    accept='image/*'
+                                    name='file'
+                                    uploadMode='instantly'
+                                    onUploaded={(e) => {
+                                        const result = Assist.processFileUpload(e);
+
+                                        if (result.Succeeded) {
+                                            setThumbnail(result.Result);
+                                        }
+                                    }}
+                                    uploadUrl={`${AppInfo.uploadUrl}${'Facility'}`} />
                             </div>
                         </div>
                         <div className="dx-field">
