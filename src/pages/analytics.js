@@ -19,10 +19,10 @@ const Analytics = () => {
   const [loadingText, setLoadingText] = useState('Loading data...');
 
   const pageConfig = {
-    currentUrl: 'peer-navigator/list',
-    deleteUrl: 'peer-navigator/delete',
-    single: 'peer-navigator',
-    title: 'Peer Navigators',
+    currentUrl: 'analytic/list',
+    deleteUrl: 'analytic/delete',
+    single: 'Analytic',
+    title: 'Analytics',
   }
 
 
@@ -51,8 +51,8 @@ const Analytics = () => {
 
     fetchData();
 
-     //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Analytics', 'View', '').then((res) => {
+    //audit
+    Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Analytics', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -63,36 +63,19 @@ const Analytics = () => {
 
   }, [pageConfig.title, pageConfig.currentUrl]);
 
-
-  const deleteItem = (e) => {
-
-    Assist.deleteItem(pageConfig.title, pageConfig.deleteUrl, e.key).then((res) => {
-
-      e.cancel = false;
-      Assist.showMessage(`The ${pageConfig.single} has been successfully deleted!`);
-
-    }).catch((ex) => {
-
-      Assist.showMessage(ex.Message, "error");
-      e.cancel = true;
-    });
-
-  }
-
   return (
     <React.Fragment>
       <h2 className={'content-block'}>{pageConfig.title}</h2>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'color_id'}
+        keyExpr={'id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
-        onRowRemoving={deleteItem}
         onCellPrepared={(e) => {
 
           if (e.rowType === "data") {
@@ -102,11 +85,6 @@ const Analytics = () => {
           }
         }}>
         <Paging defaultPageSize={10} />
-        <Editing
-          mode="row"
-          allowUpdating={false}
-          allowDeleting={true}
-          allowAdding={false} />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
@@ -116,32 +94,27 @@ const Analytics = () => {
         >
         </ColumnChooser>
         <Column
-          dataField={'itemId'}
+          dataField={'id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'username'}   
-          caption={'Username'}
+          dataField={'type'}
+          caption={'Type'}
           hidingPriority={8}
         />
         <Column
-          dataField={'description'}
-          caption={'Description'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'startDate'}
+          dataField={'start_date'}
           caption={'Start Date'}
           dataType={'date'}
-          format={'dd MMMM yyy'}
+          format={'dd MMMM yyy HH:mm'}
           hidingPriority={5}
         />
         <Column
-          dataField={'endDate'}
+          dataField={'end_date'}
           caption={'End Date'}
           dataType={'date'}
-          format={'dd MMMM yyy'}
+          format={'dd MMMM yyy HH:mm'}
           hidingPriority={5}
         />
         <Column
@@ -158,6 +131,13 @@ const Analytics = () => {
           dataField={'subject'}
           caption={'Subject'}
           hidingPriority={6}
+        />
+         <Column
+          dataField={'created_date'}
+          caption={'Date'}
+          dataType={'date'}
+          format={'dd MMMM yyy HH:mm'}
+          hidingPriority={5}
         />
       </DataGrid>
     </React.Fragment>

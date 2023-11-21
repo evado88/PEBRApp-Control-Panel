@@ -1,6 +1,6 @@
 const AppInfo = {
   appName: 'Twyshe Control Panel',
-  apiUrl: 'https://nkoleevans.pythonanywhere.com/',
+  apiUrl: 'http://127.0.0.1:5000/',
   onlineApiUrl: 'https://nkoleevans.pythonanywhere.com/',
   localApiUrl: 'http://127.0.0.1:5000/',
   uploadUrl: 'https://twyshe.app/files/APIClient.php?task=UploadFile&key=zyKROQ8sMMx676HLah3t9zaaPNtfXyrf&id=',

@@ -51,8 +51,8 @@ const PeerNavigators = () => {
 
     fetchData();
 
-     //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Peer Navigators', 'View', '').then((res) => {
+    //audit
+    Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Peer Navigators', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -63,36 +63,19 @@ const PeerNavigators = () => {
 
   }, [pageConfig.title, pageConfig.currentUrl]);
 
-
-  const deleteItem = (e) => {
-
-    Assist.deleteItem(pageConfig.title, pageConfig.deleteUrl, e.key).then((res) => {
-
-      e.cancel = false;
-      Assist.showMessage(`The ${pageConfig.single} has been successfully deleted!`);
-
-    }).catch((ex) => {
-
-      Assist.showMessage(ex.Message, "error");
-      e.cancel = true;
-    });
-
-  }
-
   return (
     <React.Fragment>
       <h2 className={'content-block'}>{pageConfig.title}</h2>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'color_id'}
+        keyExpr={'id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
-        onRowRemoving={deleteItem}
         onCellPrepared={(e) => {
 
           if (e.rowType === "data") {
@@ -102,11 +85,6 @@ const PeerNavigators = () => {
           }
         }}>
         <Paging defaultPageSize={10} />
-        <Editing
-          mode="row"
-          allowUpdating={false}
-          allowDeleting={true}
-          allowAdding={false} />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
@@ -116,7 +94,7 @@ const PeerNavigators = () => {
         >
         </ColumnChooser>
         <Column
-          dataField={'itemId'}
+          dataField={'id'}
           caption={'ID'}
           hidingPriority={8}
         />
@@ -126,38 +104,29 @@ const PeerNavigators = () => {
           hidingPriority={8}
         />
         <Column
-          dataField={'createDate'}
-          caption={'Create Date'}
-          dataType={'date'}
-          format={'dd MMMM yyy'}
-          hidingPriority={5}
-        />
-        <Column
-          dataField={'firstName'}
+          dataField={'first_name'}
           caption={'First Name'}
           hidingPriority={8}
         />
         <Column
-          dataField={'lastName'}
+          dataField={'last_name'}
           caption={'Last Name'}
           hidingPriority={6}
         />
 
         <Column
-          dataField={'phoneNumber'}
-          caption={'Occured'}
+          dataField={'phone_number'}
+          caption={'Phone Number'}
           hidingPriority={6}
         />
         <Column
-          dataField={'healthCenterDescription'}
-          caption={'Health Center'}
-          hidingPriority={6}
+          dataField={'created_date'}
+          caption={'Create Date'}
+          dataType={'date'}
+          format={'dd MMMM yyy HH:mm'}
+          hidingPriority={5}
         />
-        <Column
-          dataField={'isActive'}
-          caption={'Active'}
-          hidingPriority={6}
-        />
+
       </DataGrid>
     </React.Fragment>
   )

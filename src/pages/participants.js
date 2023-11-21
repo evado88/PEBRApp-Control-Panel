@@ -19,10 +19,10 @@ const Participants = () => {
   const [loadingText, setLoadingText] = useState('Loading data...');
 
   const pageConfig = {
-    currentUrl: 'peer-navigator/list',
-    deleteUrl: 'peer-navigator/delete',
-    single: 'peer-navigator',
-    title: 'Peer Navigators',
+    currentUrl: 'participant/list',
+    deleteUrl: 'participant/delete',
+    single: 'Participant',
+    title: 'Participants',
   }
 
 
@@ -63,36 +63,19 @@ const Participants = () => {
 
   }, [pageConfig.title, pageConfig.currentUrl]);
 
-
-  const deleteItem = (e) => {
-
-    Assist.deleteItem(pageConfig.title, pageConfig.deleteUrl, e.key).then((res) => {
-
-      e.cancel = false;
-      Assist.showMessage(`The ${pageConfig.single} has been successfully deleted!`);
-
-    }).catch((ex) => {
-
-      Assist.showMessage(ex.Message, "error");
-      e.cancel = true;
-    });
-
-  }
-
   return (
     <React.Fragment>
       <h2 className={'content-block'}>{pageConfig.title}</h2>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'color_id'}
+        keyExpr={'id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
-        onRowRemoving={deleteItem}
         onCellPrepared={(e) => {
 
           if (e.rowType === "data") {
@@ -102,11 +85,6 @@ const Participants = () => {
           }
         }}>
         <Paging defaultPageSize={10} />
-        <Editing
-          mode="row"
-          allowUpdating={false}
-          allowDeleting={true}
-          allowAdding={false} />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
@@ -116,7 +94,7 @@ const Participants = () => {
         >
         </ColumnChooser>
         <Column
-          dataField={'itemId'}
+          dataField={'id'}
           caption={'ID'}
           hidingPriority={8}
         />
@@ -126,42 +104,39 @@ const Participants = () => {
           hidingPriority={8}
         />
         <Column
-          dataField={'studyNo'}
-          caption={'Study No'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'enrollDate'}
+          dataField={'enrollment_date'}
           caption={'Enroll Date'}
+          dataType={'date'}
+          format={'dd MMMM yyy HH:mm'}
+          hidingPriority={5}
+        />
+         <Column
+          dataField={'birthday'}
+          caption={'DOB'}
           dataType={'date'}
           format={'dd MMMM yyy'}
           hidingPriority={5}
         />
+        <Column
+          dataField={'downloaded_messenger'}
+          caption={'Downloaded Messenger'}
+          hidingPriority={6}
+        />
 
         <Column
-          dataField={'gender'}
-          caption={'Gender'}
+          dataField={'phone_number'}
+          caption={'Phone Number"'}
           hidingPriority={6}
         />
         <Column
-          dataField={'phoneNumber'}
-          caption={'Phone'}
+          dataField={'residency'}
+          caption={'Residency'}
           hidingPriority={6}
         />
         <Column
-          dataField={'supportType'}
-          caption={'Support Type'}
-          hidingPriority={5}
-        />
-        <Column
-          dataField={'contraceptionMethod'}
-          caption={'Contraception Method'}
-          hidingPriority={5}
-        />
-           <Column
-          dataField={'srhServicePreffered'}
-          caption={'SRH Service Preffered'}
-          hidingPriority={5}
+          dataField={'prefered_contact_method'}
+          caption={'Contact Method'}
+          hidingPriority={6}
         />
       </DataGrid>
     </React.Fragment>
