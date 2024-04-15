@@ -96,6 +96,13 @@ const Facilities = () => {
               history.push('/facility/add');
             },
           }} />
+          <Item location="before"
+          locateInMenu="auto"
+          widget="dxButton"
+          options={{
+            icon: 'save',
+            onClick: () => Assist.downloadJson(pageConfig.title, JSON.stringify(data))
+          }} />
       </Toolbar>
       <DataGrid
         className={'dx-card wide-card'}

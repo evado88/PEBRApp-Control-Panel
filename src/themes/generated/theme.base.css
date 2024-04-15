@@ -13682,7 +13682,7 @@
 .dx-datagrid-rowsview .dx-row-focused.dx-data-row .dx-command-edit .dx-link,
 .dx-datagrid-rowsview .dx-row-focused.dx-data-row > td:not(.dx-focused),
 .dx-datagrid-rowsview .dx-row-focused.dx-data-row > tr > td:not(.dx-focused) {
-  background-color: #ff794e;
+  background-color: #383432;
   color: #fff;
 }
 .dx-datagrid-rowsview .dx-row-focused.dx-data-row .dx-command-edit .dx-link .dx-datagrid-group-closed,

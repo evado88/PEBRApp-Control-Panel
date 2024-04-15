@@ -3,7 +3,8 @@ import { withNavigationWatcher } from './contexts/navigation';
 import {
   HomePage, UsersPage, UserPage, PeerNavigatorsPage, ProfilePage, AnalyticsPage, FollowupsPage, PatientsPage, FacilitiesPage, ResourcesPage,
   CountriesPage, ColorsPage, ColorPage, DiscussionsPage, FacilityPage, ResourcePage, CountryPage, DiscussionPage, ForumPage,
-   PostPage, NotificationPage, NotificationsPage
+  PostPage, NotificationPage, NotificationsPage, PhonesPage, PhonePage,
+  PhoneParticipantsPage
 } from './pages';
 
 const routes = [
@@ -15,6 +16,11 @@ const routes = [
     path: '/peer-navigators',
     component: PeerNavigatorsPage
   },
+  {
+    path: '/phones',
+    component: PhonesPage
+  },
+ 
   {
     path: '/participants',
     component: PatientsPage
@@ -78,6 +84,14 @@ const routes = [
   {
     path: '/facility/edit/:eid',
     component: FacilityPage
+  },
+  {
+    path: '/phone/edit/:eid',
+    component: PhonePage
+  },
+  {
+    path: '/phone/participants/:eid',
+    component: PhoneParticipantsPage
   },
   {
     path: '/resource/add',

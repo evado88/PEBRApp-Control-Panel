@@ -69,8 +69,6 @@ const Users = () => {
 
   const deleteItem = (e) => {
 
-
-
     Assist.deleteItem(pageConfig.title, pageConfig.deleteUrl, e.key).then((res) => {
 
       e.cancel = false;
@@ -96,6 +94,13 @@ const Users = () => {
             onClick: () => {
               history.push('/user/add');
             },
+          }} />
+        <Item location="before"
+          locateInMenu="auto"
+          widget="dxButton"
+          options={{
+            icon: 'save',
+            onClick: () => Assist.downloadJson(pageConfig.title, JSON.stringify(data))
           }} />
       </Toolbar>
       <DataGrid

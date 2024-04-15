@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'devextreme/data/odata/store';
-
+import Toolbar, { Item } from 'devextreme-react/toolbar';
 import DataGrid, {
   Column,
   Pager,
@@ -8,7 +8,6 @@ import DataGrid, {
   FilterRow,
   LoadPanel,
   ColumnChooser,
-  Editing,
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
 
@@ -19,7 +18,7 @@ const Participants = () => {
   const [loadingText, setLoadingText] = useState('Loading data...');
 
   const pageConfig = {
-    currentUrl: 'participant/list',
+    currentUrl: 'participant/list/1/0/na',
     deleteUrl: 'participant/delete',
     single: 'Participant',
     title: 'Participants',
@@ -51,8 +50,8 @@ const Participants = () => {
 
     fetchData();
 
-     //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Participants', 'View', '').then((res) => {
+    //audit
+    Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Participants', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -66,6 +65,15 @@ const Participants = () => {
   return (
     <React.Fragment>
       <h2 className={'content-block'}>{pageConfig.title}</h2>
+      <Toolbar>
+        <Item location="before"
+          locateInMenu="auto"
+          widget="dxButton"
+          options={{
+            icon: 'save',
+            onClick: () => Assist.downloadJson(pageConfig.title, JSON.stringify(data))
+          }} />
+      </Toolbar>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
@@ -99,8 +107,31 @@ const Participants = () => {
           hidingPriority={8}
         />
         <Column
+          dataField={'parent'}
+          caption={'Parent ID'}
+          hidingPriority={8}
+          visible={false}
+        />
+        <Column
+          dataField={'status'}
+          caption={'Status ID'}
+          hidingPriority={8}
+          visible={false}
+        />
+        <Column
+          dataField={'upload'}
+          caption={'Upload ID'}
+          hidingPriority={8}
+          visible={false}
+        />
+        <Column
           dataField={'username'}
-          caption={'Username'}
+          caption={'Peer Navigator'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'study_number'}
+          caption={'Study No'}
           hidingPriority={8}
         />
         <Column
@@ -110,7 +141,7 @@ const Participants = () => {
           format={'dd MMMM yyy HH:mm'}
           hidingPriority={5}
         />
-         <Column
+        <Column
           dataField={'birthday'}
           caption={'DOB'}
           dataType={'date'}
@@ -125,7 +156,7 @@ const Participants = () => {
 
         <Column
           dataField={'phone_number'}
-          caption={'Phone Number"'}
+          caption={'Phone Number'}
           hidingPriority={6}
         />
         <Column
@@ -138,6 +169,12 @@ const Participants = () => {
           caption={'Contact Method'}
           hidingPriority={6}
         />
+        <Column
+          dataField={'upload_date'}
+          caption={'Date Uploaded'}
+          dataType={'date'}
+          format={'dd MMM yyy HH:mm'}
+          hidingPriority={5} />
       </DataGrid>
     </React.Fragment>
   )

@@ -55,8 +55,8 @@ const Notifications = () => {
 
     fetchData();
 
-     //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Notifications', 'View', '').then((res) => {
+    //audit
+    Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Notifications', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -95,6 +95,13 @@ const Notifications = () => {
             onClick: () => {
               history.push('/notification/add');
             },
+          }} />
+        <Item location="before"
+          locateInMenu="auto"
+          widget="dxButton"
+          options={{
+            icon: 'save',
+            onClick: () => Assist.downloadJson(pageConfig.title, JSON.stringify(data))
           }} />
       </Toolbar>
       <DataGrid

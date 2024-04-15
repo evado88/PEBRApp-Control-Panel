@@ -33,6 +33,10 @@ export const navigation = [
         path: '/follow-ups'
       },
       {
+        text: 'Phones',
+        path: '/phones'
+      },
+      {
         text: 'Usage Analytics',
         path: '/analytics'
       },

@@ -47,10 +47,8 @@ const Forum = (props) => {
 
       const db = getFirestore(app);
 
-      const discussionsCol = collection(db, 'twyshe-discussion-posts');
-
-      const q = query(discussionsCol, where("discussion", "==", id), orderBy("createdAt", "desc"), limit(3));
-      const discussionsSnapshot = await getDocs(q);
+      const discussionsCol = collection(db, 'twyshe/twyshe-discussion-posts/twyshe-discussion-posts/' + id + '/twyshe-discussion-posts');
+      const discussionsSnapshot = await getDocs(discussionsCol);
 
       if (discussionsSnapshot) {
 

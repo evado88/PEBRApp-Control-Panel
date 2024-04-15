@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'devextreme/data/odata/store';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-
+import Toolbar, { Item } from 'devextreme-react/toolbar';
 import DataGrid, {
   Column,
   Pager,
@@ -43,7 +43,7 @@ const Discussions = () => {
 
       const db = getFirestore(app);
 
-      const discussionsCol = collection(db, 'twyshe-discussions');
+      const discussionsCol = collection(db, 'twyshe/twyshe-discussions/twyshe-discussions');
       const discussionsSnapshot = await getDocs(discussionsCol);
 
       if (discussionsSnapshot) {
@@ -84,6 +84,15 @@ const Discussions = () => {
   return (
     <React.Fragment>
       <h2 className={'content-block'}>{pageConfig.title}</h2>
+      <Toolbar>
+        <Item location="before"
+          locateInMenu="auto"
+          widget="dxButton"
+          options={{
+            icon: 'save',
+            onClick: () => Assist.downloadJson(pageConfig.title, JSON.stringify(data))
+          }} />
+      </Toolbar>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'devextreme/data/odata/store';
-
+import Toolbar, { Item } from 'devextreme-react/toolbar';
 import DataGrid, {
   Column,
   Pager,
@@ -8,7 +8,6 @@ import DataGrid, {
   FilterRow,
   LoadPanel,
   ColumnChooser,
-  Editing,
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
 
@@ -19,7 +18,7 @@ const Followups = () => {
   const [loadingText, setLoadingText] = useState('Loading data...');
 
   const pageConfig = {
-    currentUrl: 'followup/list',
+    currentUrl: 'followup/list/1/0/na',
     deleteUrl: 'followup/delete',
     single: 'follow-up',
     title: 'Follow-ups',
@@ -51,8 +50,8 @@ const Followups = () => {
 
     fetchData();
 
-     //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Follow-ups', 'View', '').then((res) => {
+    //audit
+    Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Follow-ups', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -67,6 +66,15 @@ const Followups = () => {
   return (
     <React.Fragment>
       <h2 className={'content-block'}>{pageConfig.title}</h2>
+      <Toolbar>
+        <Item location="before"
+          locateInMenu="auto"
+          widget="dxButton"
+          options={{
+            icon: 'save',
+            onClick: () => Assist.downloadJson(pageConfig.title, JSON.stringify(data))
+          }} />
+      </Toolbar>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
@@ -91,9 +99,27 @@ const Followups = () => {
           caption={'ID'}
           hidingPriority={8}
         />
-         <Column
+        <Column
           dataField={'parent'}
-          caption={'Parent'}
+          caption={'Parent ID'}
+          hidingPriority={8}
+          visible={false}
+        />
+        <Column
+          dataField={'status'}
+          caption={'Status ID'}
+          hidingPriority={8}
+          visible={false}
+        />
+        <Column
+          dataField={'upload'}
+          caption={'Upload ID'}
+          hidingPriority={8}
+          visible={false}
+        />
+        <Column
+          dataField={'username'}
+          caption={'Peer Navigator'}
           hidingPriority={8}
         />
         <Column
@@ -122,7 +148,7 @@ const Followups = () => {
           caption={'Other Problems'}
           hidingPriority={6}
         />
-         <Column
+        <Column
           dataField={'next_date'}
           caption={'Next Date'}
           dataType={'date'}
@@ -136,6 +162,12 @@ const Followups = () => {
           format={'dd MMMM yyy HH:mm'}
           hidingPriority={5}
         />
+        <Column
+          dataField={'upload_date'}
+          caption={'Date Uploaded'}
+          dataType={'date'}
+          format={'dd MMM yyy HH:mm'}
+          hidingPriority={5} />
       </DataGrid>
     </React.Fragment>
   )

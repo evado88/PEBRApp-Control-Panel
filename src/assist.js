@@ -15,6 +15,25 @@ class Assist {
         appId: "1:878075714362:web:55575ac3647ff7d3cd0e03"
     };
 
+    static getTypeId(type = 'Public') {
+
+        if (type === 'Public') {
+
+            return 1;
+        }
+        else if (type === 'Peer Navigator') {
+
+            return 2;
+        }
+        else if (type === 'Participant') {
+
+            return 3;
+        }
+        else {
+            return 4;
+        }
+    }
+
     ///Logs a message to the console
     static log(message, type = 'log') {
 
@@ -144,10 +163,95 @@ class Assist {
 
         });
 
+    }
 
+    static async unlinkParticipant(participant, number) {
+
+        const url = 'peer/remove/participant';
+
+        Assist.log(`Starting to unlink participant ${participant} and peer ${number} from server using url ${AppInfo.apiUrl + url}`, 'log');
+
+        return new Promise(function (myResolve, myReject) {
+
+            axios({
+                method: 'post',
+                url: AppInfo.apiUrl + url,
+                data: { uparticipant: participant, unumber: number },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).then((response) => {
+
+                Assist.log(`Response has completed for unlinking participant ${participant} and peer ${number} from server`);
+
+                if (typeof response.data == 'string') {
+
+                    Assist.log(`Unable to process response for unlinking participant ${participant} and peer ${number} from server: ${JSON.stringify(response)}`);
+
+                    myReject(new TaskResult(false, 'Unable to process server response from server', null));
+
+                } else {
+
+                    if (response.data.succeeded) {
+
+                        myResolve(response.data);
+
+                    } else {
+
+                        Assist.log(`Unable to unlinking participant ${participant} and peer ${number} from server: ${response.data.message}`);
+                        myReject(response.data);
+
+                    }
+                }
+            }).catch(error => {
+
+                Assist.log(`An error occured when unlinking participant ${participant} and peer ${number} from server: ${JSON.stringify(error)}`);
+                myReject(new TaskResult(false, `An error occured when unlinking participant ${participant} and peer ${number} from server`, null));
+
+            });
+
+        });
 
     }
 
+    static async downloadJson(filename, jsonData) {
+
+        const url = 'downloadJson';
+
+        Assist.log(`Starting to download JSON with filename ${filename} and except ${jsonData.substring(0, 10)} from server using url ${AppInfo.apiUrl + url}`, 'log');
+
+        return new Promise(function (myResolve, myReject) {
+
+            axios({
+                method: 'post',
+                url: AppInfo.apiUrl + url,
+                data: { ufilename: filename, ujson: jsonData },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                responseType: 'blob'
+            }).then((response) => {
+
+                // create file link in browser's memory
+                const href = URL.createObjectURL(response.data);
+
+                // create "a" HTML element with href to file & click
+                const link = document.createElement('a');
+                link.href = href;
+                link.setAttribute('download', `${filename}.csv`); //or any other extension
+                document.body.appendChild(link);
+                link.click();
+
+                // clean up "a" element & remove ObjectURL
+                document.body.removeChild(link);
+                URL.revokeObjectURL(href);
+
+            }).catch(error => {
+
+                Assist.log(`An error occured when downloading JSON with filename ${filename} and except ${jsonData.substring(0, 10)} from server: ${JSON.stringify(error)}`);
+                myReject(new TaskResult(false, `An error occured when downloading the file`, null));
+
+            });
+
+        });
+
+    }
     /**Logs the login for the specified user
  * @param {string} username The username of the user
  * @param {string} source The source of the login

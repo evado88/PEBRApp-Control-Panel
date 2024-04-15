@@ -50,7 +50,7 @@ const Discussion = (props) => {
             // invalid url will trigger an 404 error
             const db = getFirestore(app);
 
-            const docRef = doc(db, 'twyshe-discussions', id);
+            const docRef = doc(db, 'twyshe/twyshe-discussions/twyshe-discussions', id);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
@@ -99,7 +99,7 @@ const Discussion = (props) => {
         // invalid url will trigger an 404 error
         const db = getFirestore(app);
 
-        const docRef = doc(db, 'twyshe-discussions', id);
+        const docRef = doc(db, 'twyshe/twyshe-discussions/twyshe-discussions', id);
         await updateDoc(docRef, {
             title: utitle,
             description: udescription,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'devextreme/data/odata/store';
-
+import Toolbar, { Item } from 'devextreme-react/toolbar';
 import DataGrid, {
   Column,
   Pager,
@@ -8,7 +8,6 @@ import DataGrid, {
   FilterRow,
   LoadPanel,
   ColumnChooser,
-  Editing,
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
 
@@ -66,6 +65,15 @@ const Analytics = () => {
   return (
     <React.Fragment>
       <h2 className={'content-block'}>{pageConfig.title}</h2>
+      <Toolbar>
+        <Item location="before"
+          locateInMenu="auto"
+          widget="dxButton"
+          options={{
+            icon: 'save',
+            onClick: () => Assist.downloadJson(pageConfig.title, JSON.stringify(data))
+          }} />
+      </Toolbar>
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
@@ -96,6 +104,17 @@ const Analytics = () => {
         <Column
           dataField={'id'}
           caption={'ID'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'upload'}
+          caption={'Upload ID'}
+          hidingPriority={8}
+          visible={false}
+        />
+        <Column
+          dataField={'username'}
+          caption={'Peer Navigator'}
           hidingPriority={8}
         />
         <Column
@@ -132,13 +151,19 @@ const Analytics = () => {
           caption={'Subject'}
           hidingPriority={6}
         />
-         <Column
+        <Column
           dataField={'created_date'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy HH:mm'}
           hidingPriority={5}
         />
+        <Column
+          dataField={'upload_date'}
+          caption={'Date Uploaded'}
+          dataType={'date'}
+          format={'dd MMM yyy HH:mm'}
+          hidingPriority={5} />
       </DataGrid>
     </React.Fragment>
   )

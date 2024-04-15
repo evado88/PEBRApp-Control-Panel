@@ -8,20 +8,20 @@ import DataGrid, {
   FilterRow,
   LoadPanel,
   ColumnChooser,
+  Editing,
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
-
-const PeerNavigators = () => {
+const Phones = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Loading data...');
 
   const pageConfig = {
-    currentUrl: 'peer-navigator/list/1/0/na',
-    deleteUrl: 'peer-navigator/delete',
-    single: 'peer-navigator',
-    title: 'Peer Navigators',
+    currentUrl: 'phone/list',
+    deleteUrl: 'phone/delete',
+    single: 'phone',
+    title: 'Phones',
   }
 
 
@@ -51,7 +51,7 @@ const PeerNavigators = () => {
     fetchData();
 
     //audit
-    Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Peer Navigators', 'View', '').then((res) => {
+    Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Users', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -61,6 +61,24 @@ const PeerNavigators = () => {
     });
 
   }, [pageConfig.title, pageConfig.currentUrl]);
+
+
+  const deleteItem = (e) => {
+
+
+
+    Assist.deleteItem(pageConfig.title, pageConfig.deleteUrl, e.key).then((res) => {
+
+      e.cancel = false;
+      Assist.showMessage(`The ${pageConfig.single} has been successfully deleted!`);
+
+    }).catch((ex) => {
+
+      e.cancel = true;
+      Assist.showMessage(ex.Message, "error");
+    });
+
+  }
 
   return (
     <React.Fragment>
@@ -77,22 +95,28 @@ const PeerNavigators = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'id'}
+        keyExpr={'phone_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
         defaultFocusedRowIndex={0}
         columnAutoWidth={true}
         columnHidingEnabled={true}
+        onRowRemoving={deleteItem}
         onCellPrepared={(e) => {
 
           if (e.rowType === "data") {
-            if (e.column.dataField === "color_code") {
-              e.cellElement.style.cssText = `color: white; background-color: ${e.data.color_code}`;
+            if (e.column.dataField === "phone_color") {
+              e.cellElement.style.cssText = `color: white; background-color: ${e.data.phone_color}`;
             }
           }
         }}>
-        <Paging defaultPageSize={10} />
+        <Paging defaultPageSize={5} />
+        <Editing
+          mode="row"
+          allowUpdating={false}
+          allowDeleting={false}
+          allowAdding={false} />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
@@ -102,87 +126,87 @@ const PeerNavigators = () => {
         >
         </ColumnChooser>
         <Column
-          dataField={'id'}
+          dataField={'phone_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'parent'}
-          caption={'Parent ID'}
+          dataField={'phone_name'}
+          caption={'Name'}
           hidingPriority={8}
-          visible={false}
+          cellRender={(e) => {
+            return <a href={`#/phone/edit/${e.data.phone_number}`}>{e.data.phone_name}</a>;
+          }}
         />
-        <Column
-          dataField={'status'}
-          caption={'Status ID'}
-          hidingPriority={8}
-          visible={false}
-        />
-        <Column
-          dataField={'upload'}
-          caption={'Upload ID'}
-          hidingPriority={8}
-          visible={false}
-        />
-        <Column
-          dataField={'username'}
-          caption={'Username'}
-          hidingPriority={8}
-        />
-
-        <Column
-          dataField={'first_name'}
-          caption={'First Name'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'last_name'}
-          caption={'Last Name'}
-          hidingPriority={6}
-        />
-
         <Column
           dataField={'phone_number'}
-          caption={'Phone Number'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'created_date'}
-          caption={'Create Date'}
-          dataType={'date'}
-          format={'dd MMM yyy HH:mm'}
-          hidingPriority={5}
+          caption={'Number'}
+          hidingPriority={8}
+          cellRender={(e) => {
+            if (e.data.phone_status === 2) {
+              return <a href={`#/phone/participants/${e.data.phone_number}`}>{e.data.phone_number}</a>;
+            } else {
+              return e.data.phone_number;
+            }
+
+          }}
         />
         <Column
           dataField={'n_participants'}
-          caption={'Participants'}
+          caption={'Assigned Participants'}
           hidingPriority={8}
         />
         <Column
-          dataField={'n_followups'}
-          caption={'Followups'}
+          dataField={'phone_pin'}
+          caption={'PIN'}
+          hidingPriority={8}
+          visible={false}
+        />
+        <Column
+          dataField={'phone_color'}
+          caption={'Color'}
+          hidingPriority={8}
+        />
+
+        <Column
+          dataField={'p_status'}
+          caption={'Status'}
           hidingPriority={8}
         />
         <Column
-          dataField={'n_analytics'}
-          caption={'Analytics'}
-          hidingPriority={8}
+          dataField={'phone_email'}
+          caption={'Email'}
+          hidingPriority={6}
         />
         <Column
-          dataField={'t_minutes'}
-          caption={'Minutes'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'upload_date'}
-          caption={'Date Uploaded'}
+          dataField={'phone_createdate'}
+          caption={'Registration Date'}
           dataType={'date'}
-          format={'dd MMM yyy HH:mm'}
+          format={'dd MMMM yyy'}
           hidingPriority={5}
+        />
+        <Column
+          dataField={'phone_lastupdatedate'}
+          caption={'Last Update Date'}
+          dataType={'date'}
+          format={'dd MMMM yyy'}
+          hidingPriority={5}
+        />
+        <Column
+          dataField={'phone_lastupdateuser'}
+          caption={'Last Update User'}
+          hidingPriority={6}
+          visible={false}
+        />
+        <Column
+          dataField={'phone_token'}
+          caption={'Token'}
+          hidingPriority={6}
+          visible={false}
         />
       </DataGrid>
     </React.Fragment>
   )
 };
 
-export default PeerNavigators;
+export default Phones;
