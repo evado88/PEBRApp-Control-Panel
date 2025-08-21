@@ -59,7 +59,7 @@ export async function signIn(useremail, userpassword) {
 
 export async function getUser() {
 
-  // Send request
+  // Send request0975177698
   const currentUser = sessionStorage.getItem('ruser');
 
   if (currentUser == null) {

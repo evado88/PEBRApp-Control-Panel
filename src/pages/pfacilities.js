@@ -14,7 +14,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
 
-const Resources = () => {
+const Facilities = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,10 +23,10 @@ const Resources = () => {
   const history = useHistory();
 
   const pageConfig = {
-    currentUrl: 'resource/list',
-    deleteUrl: 'resource/delete',
-    single: 'Resource',
-    title: 'Resources',
+    currentUrl: 'pfacility/list',
+    deleteUrl: 'facility/delete',
+    single: 'facility',
+    title: 'Peer Navigator Facilities',
   }
 
 
@@ -56,7 +56,7 @@ const Resources = () => {
     fetchData();
 
      //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Resources', 'View', '').then((res) => {
+     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Facilities', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -93,7 +93,7 @@ const Resources = () => {
           options={{
             icon: 'plus',
             onClick: () => {
-              history.push('/resource/add');
+              history.push('/pfacility/add');
             },
           }} />
           <Item location="before"
@@ -107,7 +107,7 @@ const Resources = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'resource_id'}
+        keyExpr={'pfacility_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -138,46 +138,50 @@ const Resources = () => {
         >
         </ColumnChooser>
         <Column
-          dataField={'resource_id'}
+          dataField={'pfacility_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_name'}
+          dataField={'pfacility_name'}
           caption={'Name'}
           hidingPriority={8}
           cellRender={(e) => {
-            return <a href={`#/resource/edit/${e.data.resource_id}`}>{e.data.resource_name}</a>;
+            return <a href={`#/pfacility/edit/${e.data.pfacility_id}`}>{e.data.pfacility_name}</a>;
           }}
         />
-       <Column
-          dataField={'r_type'}
-          caption={'Type'}
+        <Column
+          dataField={'pfacility_services'}
+          caption={'Services'}
           hidingPriority={8}
+          width={400}
         />
         <Column
-          dataField={'resource_description'}
-          caption={'Description'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'resource_url'}
-          caption={'URL'}
+          dataField={'pfacility_hours'}
+          caption={'Work Hours'}
           hidingPriority={6}
-          visible={false}
+          width={400}
+        />
+
+        <Column
+          dataField={'pfacility_names'}
+          caption={'Contact'}
+          hidingPriority={6}
+          width={200}
         />
         <Column
-          dataField={'r_status'}
+          dataField={'pfacility_contact'}
+          caption={'Phone'}
+          hidingPriority={6}
+          width={200}
+        />
+        <Column
+          dataField={'f_status'}
           caption={'Status'}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_lastupdateuser'}
-          caption={'User'}
-          hidingPriority={6}
-        />
-        <Column
-          dataField={'resource_createdate'}
+          dataField={'pfacility_createdate'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
@@ -189,4 +193,4 @@ const Resources = () => {
   )
 };
 
-export default Resources;
+export default Facilities;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useCallback} from 'react';
 import axios from "axios";
 import SelectBox from 'devextreme-react/select-box';
 import Button from 'devextreme-react/button';
@@ -44,7 +44,7 @@ const PhoneParticipants = (props) => {
     const verb = id === 0 ? 'adding' : 'Updating';
 
 
-    async function fetchData() {
+   const fetchData = useCallback(() => {
 
         Assist.loadData(title, 'peer/list/participant/' + id).then((res) => {
 
@@ -79,9 +79,7 @@ const PhoneParticipants = (props) => {
             setLoadingText('Could not show linked participants')
 
         });
-    }
-
-
+    }, [id]);
 
     useEffect(() => {
 
@@ -97,7 +95,7 @@ const PhoneParticipants = (props) => {
             Assist.log(x.Message, "warn");
         });
 
-    }, [id, verb]);
+    }, [id, verb, fetchData]);
 
     const unlinkPeerParticipant = (e) => {
 

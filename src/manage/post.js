@@ -33,7 +33,11 @@ const Post = (props) => {
     const [ustate, setState] = useState('');
 
     const pageTitle = 'Post';
+
+    const fid = props.match.params.fid === undefined ? 0 : props.match.params.fid;
     const id = props.match.params.eid === undefined ? 0 : props.match.params.eid;
+    const docId = `twyshe/twyshe-discussion-posts/twyshe-discussion-posts/${fid}/twyshe-discussion-posts/${id}`;
+
     const action = id === 0 ? 'Add' : 'Update';
     const verb = id === 0 ? 'adding' : 'Updating';
 
@@ -44,18 +48,21 @@ const Post = (props) => {
 
             setLoading(true);
 
+
+
             Assist.log(`Starting to load ${pageTitle} from server`);
 
             // invalid url will trigger an 404 error
             const db = getFirestore(app);
 
-            const docRef = doc(db, `twyshe/twyshe-discussion-posts/twyshe-discussion-posts/${id}/twyshe-discussion-posts`, id);
+            const docRef = doc(db, docId);
+
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 setLoading(false);
 
-                const item = { docId: docSnap.id, statusName: docSnap.data().state === 1 ? 'Active' : 'Disabled', ...docSnap.data() };
+                const item = { docId: docSnap.id, text: docSnap.data().text, statusName: docSnap.data().state === 1 ? 'Active' : 'Deleted', };
 
                 setText(item.text);
                 setState(item.statusName);
@@ -73,17 +80,17 @@ const Post = (props) => {
             loadData();
         }
 
-            //audit
-            Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Post', verb, id).then((res) => {
+        //audit
+        Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Post', verb, id).then((res) => {
 
-                Assist.log(res.Message, "info");
-    
-            }).catch((x) => {
-    
-                Assist.log(x.Message, "warn");
-            });
+            Assist.log(res.Message, "info");
 
-    }, [id, app, verb]);
+        }).catch((x) => {
+
+            Assist.log(x.Message, "warn");
+        });
+
+    }, [id, app, verb, fid, docId]);
 
 
     const onFormSubmit = async (e) => {
@@ -97,7 +104,7 @@ const Post = (props) => {
         // invalid url will trigger an 404 error
         const db = getFirestore(app);
 
-        const docRef = doc(db, 'twyshe/twyshe-discussion-posts/twyshe-discussion-posts/' + id + '/twyshe-discussion-posts', id);
+        const docRef = doc(db, docId);
         await updateDoc(docRef, {
             text: utext,
             state: ustate === 'Active' ? 1 : 2,

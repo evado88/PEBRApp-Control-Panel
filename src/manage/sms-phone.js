@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { TextBox } from "devextreme-react/text-box";
 import SelectBox from "devextreme-react/select-box";
+import { TextBox } from "devextreme-react/text-box";
 import Button from "devextreme-react/button";
 import ValidationSummary from "devextreme-react/validation-summary";
 import { LoadPanel } from "devextreme-react/load-panel";
@@ -13,37 +13,56 @@ import { Validator, RequiredRule } from "devextreme-react/validator";
 import AppInfo from "../app-info.js";
 import Assist from "../assist.js";
 
-const Notification = (props) => {
+const SendSMS = (props) => {
   const history = useHistory();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const [type, setType] = useState("");
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [cat, setCategory] = useState("");
+  const [status, setStatus] = useState("");
 
-  const pageTitle = "Notification";
+  const title = "SMS Phone";
   const id = props.match.params.eid === undefined ? 0 : props.match.params.eid;
   const action = id === 0 ? "Add" : "Update";
   const verb = id === 0 ? "adding" : "Updating";
 
+  const [categoryList, setCategoryList] = useState([]);
+
+  const [allCategories, setAllCategories] = useState([]);
+
   useEffect(() => {
+    Assist.loadData("Categories", "sms-category/list")
+      .then((res) => {
+        const items = res.Result.map((cat) => {
+          return cat.sms_cat_name;
+        });
+
+        setCategoryList(items);
+        setAllCategories(res.Result);
+
+        if (id !== 0) {
+          loadData();
+        }
+      })
+      .catch((ex) => {
+        Assist.showMessage(ex.Message, "error");
+      });
+
     const loadData = () => {
       setLoading(true);
 
-      const url = AppInfo.apiUrl + "notification/id/" + id;
+      const url = AppInfo.apiUrl + "sms-phone/id/" + id;
 
-      Assist.log(`Starting to load ${pageTitle} from server ${url}`);
+      Assist.log(`Starting to load ${title} from server ${url}`);
 
       // invalid url will trigger an 404 error
       axios
         .get(url)
         .then((response) => {
-          Assist.log(
-            `Response for loading ${pageTitle} has completed from server`
-          );
+          Assist.log(`Response for loading ${title} has completed from server`);
           setLoading(false);
 
           if (typeof response.data == "string") {
@@ -53,10 +72,10 @@ const Notification = (props) => {
             if (response.data.succeeded) {
               setError(false);
 
-              setType(response.data.items[0].notification_type);
-              setTitle(response.data.items[0].notification_title);
-              setBody(response.data.items[0].notification_body);
-              setDescription(response.data.items[0].notification_description);
+              setName(response.data.items[0].sms_phone_name);
+              setNumber(response.data.items[0].sms_phone_number);
+              setCategory(response.data.items[0].sms_cat_name);
+              setStatus(response.data.items[0].c_status);
             } else {
               Assist.showMessage(response.data.message);
               setError(true);
@@ -68,22 +87,18 @@ const Notification = (props) => {
           setError(true);
 
           Assist.log(
-            `An errocooured when loading ${pageTitle} from server: ${error}`
+            `An errocooured when loading ${title} from server: ${error}`
           );
           Assist.showMessage(
-            `An error occured when loading ${pageTitle} from server`
+            `An error occured when loading ${title} from server`
           );
         });
     };
 
-    if (id !== 0) {
-      loadData();
-    }
-
     //audit
     Assist.addAudit(
       window.sessionStorage.getItem("ruser"),
-      "Notification",
+      "SMSPhone",
       verb,
       id
     )
@@ -100,18 +115,24 @@ const Notification = (props) => {
 
     setLoading(true);
 
-    const url = AppInfo.apiUrl + "notification/update";
+    const url = AppInfo.apiUrl + "sms-phone/update";
+
+    const selectedcategory = allCategories.find(
+      (item) => item.sms_cat_name === cat
+    );
+
+    console.log("selected category", selectedcategory);
 
     const fields = {
       uid: id,
-      utype: type,
-      utitle: title,
-      ubody: body,
-      udescription: description,
+      uname: name,
+      unumber: number,
+      ucategory: selectedcategory.sms_cat_id,
+      ustatus: status === "Active" ? 1 : 2,
       user: window.sessionStorage.getItem("ruser"),
     };
 
-    Assist.log(`Starting to ${verb} ${pageTitle} on server ${url}`);
+    Assist.log(`Starting to ${verb} ${title} on server ${url}`);
 
     axios({
       method: "post",
@@ -120,39 +141,30 @@ const Notification = (props) => {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
       .then((response) => {
-        Assist.log(`Response for ${verb} ${pageTitle} has completed on server`);
+        Assist.log(`Response for ${verb} ${title} has completed on server`);
 
         setLoading(false);
 
         if (typeof response.data == "string") {
           Assist.showMessage(
-            `Unable to process server response for ${verb} ${pageTitle} from server`
+            `Unable to process server response for ${verb} ${title} from server`
           );
         } else {
           if (response.data.succeeded) {
-            setType(response.data.items[0].notification_type);
-            setTitle(response.data.items[0].notification_title);
-            setBody(response.data.items[0].notification_body);
-            setDescription(response.data.items[0].notification_description);
+            setName(response.data.items[0].sms_phone_name);
+            setNumber(response.data.items[0].sms_phone_number);
+            setCategory(response.data.items[0].sms_cat_name);
+            setStatus(response.data.items[0].c_status);
 
             //check if user was adding and redirect
             if (id === 0) {
-              Assist.sendTopicMessage(title, body, type)
-                .then((res) => {
-                  Assist.log(res.Message, "info");
-                })
-                .catch((x) => {
-                  Assist.showMessage(x.Message, "error");
-                })
-                .finally(() => {
-                  history.push(
-                    `/notification/edit/${response.data.items[0].notification_id}`
-                  );
-                });
+              history.push(
+                `/sms-phone/edit/${response.data.items[0].SMSPhone_id}`
+              );
             }
 
             Assist.showMessage(
-              `The ${pageTitle.toLowerCase()} has been successfully saved!`,
+              `The ${title.toLowerCase()} has been successfully saved!`,
               "success"
             );
           } else {
@@ -165,10 +177,10 @@ const Notification = (props) => {
         setLoading(false);
 
         Assist.log(
-          `An error occoured when ${verb} ${pageTitle.toLowerCase()} on server: ${error}`
+          `An error occoured when ${verb} ${title.toLowerCase()} on server: ${error}`
         );
         Assist.showMessage(
-          `An error occured when ${verb} ${pageTitle.toLowerCase()}. Please try again`,
+          `An error occured when ${verb} ${title.toLowerCase()}. Please try again`,
           "error"
         );
       });
@@ -177,7 +189,7 @@ const Notification = (props) => {
   return (
     <React.Fragment>
       <h2 className={"content-block"}>
-        {action} {pageTitle}
+        {action} {title}
       </h2>
       <LoadPanel
         shadingColor="rgba(0,0,0,0.4)"
@@ -208,66 +220,67 @@ const Notification = (props) => {
         <form action="your-action" onSubmit={onFormSubmit}>
           <div className="dx-fieldset">
             <div className="dx-fieldset-header">Properties</div>
-
             <div className="dx-field">
-              <div className="dx-field-label">Type</div>
+              <div className="dx-field-label">Name</div>
+              <div className="dx-field-value">
+                <TextBox
+                  disabled={error}
+                  onValueChanged={(e) => setName(e.value)}
+                  value={name}
+                  inputAttr={{ "aria-label": "Name" }}
+                >
+                  <Validator>
+                    <RequiredRule message="Phone name is required" />
+                  </Validator>
+                </TextBox>
+              </div>
+            </div>
+            <div className="dx-field">
+              <div className="dx-field-label">Number</div>
+              <div className="dx-field-value">
+                <TextBox
+                  disabled={error}
+                  onValueChanged={(e) => setNumber(e.value)}
+                  value={number}
+                  inputAttr={{ "aria-label": "Number" }}
+                >
+                  <Validator>
+                    <RequiredRule message="Phone number is required" />
+                  </Validator>
+                </TextBox>
+              </div>
+            </div>
+            <div className="dx-field">
+              <div className="dx-field-label">Category</div>
               <div className="dx-field-value">
                 <SelectBox
-                  dataSource={AppInfo.notificationTypeList}
-                  onValueChanged={(e) => setType(e.value)}
+                  dataSource={categoryList}
                   validationMessagePosition="left"
-                  value={type}
+                  onValueChanged={(e) => setCategory(e.value)}
+                  inputAttr={{ "aria-label": "Category" }}
+                  value={cat}
                   disabled={error}
                 >
                   <Validator>
-                    <RequiredRule message="Type is required" />
+                    <RequiredRule message="Category is required" />
                   </Validator>
                 </SelectBox>
               </div>
             </div>
             <div className="dx-field">
-              <div className="dx-field-label">Title</div>
+              <div className="dx-field-label">Status</div>
               <div className="dx-field-value">
-                <TextBox
+                <SelectBox
+                  dataSource={AppInfo.statusList}
+                  onValueChanged={(e) => setStatus(e.value)}
+                  validationMessagePosition="left"
+                  value={status}
                   disabled={error}
-                  onValueChanged={(e) => setTitle(e.value)}
-                  value={title}
-                  inputAttr={{ "aria-label": "Title" }}
                 >
                   <Validator>
-                    <RequiredRule message="Title is required" />
+                    <RequiredRule message="Status is required" />
                   </Validator>
-                </TextBox>
-              </div>
-            </div>
-            <div className="dx-field">
-              <div className="dx-field-label">Body</div>
-              <div className="dx-field-value">
-                <TextBox
-                  disabled={error}
-                  onValueChanged={(e) => setBody(e.value)}
-                  value={body}
-                  inputAttr={{ "aria-label": "Body" }}
-                >
-                  <Validator>
-                    <RequiredRule message="Body is required" />
-                  </Validator>
-                </TextBox>
-              </div>
-            </div>
-            <div className="dx-field">
-              <div className="dx-field-label">Description</div>
-              <div className="dx-field-value">
-                <TextBox
-                  disabled={error}
-                  onValueChanged={(e) => setDescription(e.value)}
-                  value={description}
-                  inputAttr={{ "aria-label": "Description" }}
-                >
-                  <Validator>
-                    <RequiredRule message="Description is required" />
-                  </Validator>
-                </TextBox>
+                </SelectBox>
               </div>
             </div>
           </div>
@@ -290,4 +303,4 @@ const Notification = (props) => {
   );
 };
 
-export default Notification;
+export default SendSMS;

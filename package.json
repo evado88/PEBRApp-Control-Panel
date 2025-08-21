@@ -7,10 +7,10 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^1.4.0",
-    "devextreme": "^20.2.4",
-    "devextreme-react": "20.2.3",
+    "devextreme": "22.2.14",
+    "devextreme-react": "22.2.14",
     "firebase": "^10.3.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^9.0.0",
     "react": "^16.2.0",
     "react-app-polyfill": "^1.0.0",
     "react-dom": "^16.2.0",
@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "devextreme-cli": "1.2.14",
-    "devextreme-themebuilder": "^20.2.4"
+    "devextreme-themebuilder": "^20.2.4",
+    "sass": "^1.81.0"
   }
 }

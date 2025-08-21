@@ -14,7 +14,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
 
-const Resources = () => {
+const SMSCategories = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,10 +23,10 @@ const Resources = () => {
   const history = useHistory();
 
   const pageConfig = {
-    currentUrl: 'resource/list',
-    deleteUrl: 'resource/delete',
-    single: 'Resource',
-    title: 'Resources',
+    currentUrl: 'sms-category/list',
+    deleteUrl: 'sms-category/delete',
+    single: 'Country',
+    title: 'SMS Categories',
   }
 
 
@@ -56,7 +56,7 @@ const Resources = () => {
     fetchData();
 
      //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Resources', 'View', '').then((res) => {
+     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Countries', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -93,7 +93,7 @@ const Resources = () => {
           options={{
             icon: 'plus',
             onClick: () => {
-              history.push('/resource/add');
+              history.push('/sms-category/add');
             },
           }} />
           <Item location="before"
@@ -107,7 +107,7 @@ const Resources = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'resource_id'}
+        keyExpr={'sms_cat_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -138,46 +138,35 @@ const Resources = () => {
         >
         </ColumnChooser>
         <Column
-          dataField={'resource_id'}
+          dataField={'sms_cat_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_name'}
+          dataField={'sms_cat_name'}
           caption={'Name'}
           hidingPriority={8}
           cellRender={(e) => {
-            return <a href={`#/resource/edit/${e.data.resource_id}`}>{e.data.resource_name}</a>;
+            return <a href={`#/sms-category/edit/${e.data.sms_cat_id}`}>{e.data.sms_cat_name}</a>;
           }}
         />
-       <Column
-          dataField={'r_type'}
-          caption={'Type'}
+        <Column
+          dataField={'sms_cat_description'}
+          caption={'Code'}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_description'}
-          caption={'Description'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'resource_url'}
-          caption={'URL'}
-          hidingPriority={6}
-          visible={false}
-        />
-        <Column
-          dataField={'r_status'}
+          dataField={'c_status'}
           caption={'Status'}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_lastupdateuser'}
+          dataField={'sms_cat_createuser'}
           caption={'User'}
           hidingPriority={6}
         />
         <Column
-          dataField={'resource_createdate'}
+          dataField={'sms_cat_createdate'}
           caption={'Date'}
           dataType={'date'}
           format={'dd MMMM yyy'}
@@ -189,4 +178,4 @@ const Resources = () => {
   )
 };
 
-export default Resources;
+export default SMSCategories;

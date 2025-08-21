@@ -16,7 +16,7 @@ import DataGrid, {
 import Assist from '../assist';
 
 
-const Forum = (props) => {
+const ChatPage = (props) => {
 
   // Your web app's Firebase configuration
   // Initialize Firebase
@@ -30,8 +30,8 @@ const Forum = (props) => {
   const pageConfig = {
     currentUrl: 'discussion/list',
     deleteUrl: 'discussion/delete',
-    single: 'discussion',
-    title: 'Discussion Chat',
+    single: 'chat',
+    title: 'Chat',
   }
 
   const id = props.match.params.eid === undefined ? 0 : props.match.params.eid;
@@ -50,7 +50,7 @@ const Forum = (props) => {
 
 
 
-      const discussionsCol = collection(db, 'twyshe/twyshe-discussion-posts/twyshe-discussion-posts/' + id + '/twyshe-discussion-posts');
+      const discussionsCol = collection(db, `twyshe/twyshe-chats/twyshe-chats/${id}/twyshe-chats`);
 
       const q = query(discussionsCol, orderBy("createdAt", "asc"));
       const discussionsSnapshot = await getDocs(q);
@@ -64,11 +64,13 @@ const Forum = (props) => {
             date: new Date(doc.data().createdAt.seconds * 1000),
             statusName: doc.data().state === 1 ? 'Active' : 'Deleted',
             text: doc.data().text,
-            shortText: doc.data().text.length < 50 ? doc.data().text : `${doc.data().text.substring(0, 50)}...`,
             discussion: doc.data().discussion,
             firstName: doc.data().author.firstName,
+            number: doc.data().author.id,
             color: doc.data().author.color,
             status: doc.data().status,
+            type: doc.data().type,
+            uri: doc.data().type === 'file' || doc.data().type === 'image' ? doc.data().uri : '#'
           }
         ));
 
@@ -149,13 +151,22 @@ const Forum = (props) => {
           caption={'ID'}
           hidingPriority={8}
           allowEditing={false}
-          cellRender={(e) => {
-            return <a href={`#/discussion/post/${id}/edit/${e.data.docId}`}>{e.data.docId}</a>;
-          }}
         />
         <Column
-          dataField={'discussion'}
-          caption={'Discussion'}
+          dataField={'number'}
+          caption={'Number'}
+          hidingPriority={8}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'firstName'}
+          caption={'Name'}
+          hidingPriority={8}
+          allowEditing={false}
+        />
+        <Column
+          dataField={'type'}
+          caption={'Type'}
           hidingPriority={8}
           allowEditing={false}
         />
@@ -163,12 +174,17 @@ const Forum = (props) => {
           dataField={'text'}
           caption={'Text (F)'}
           hidingPriority={8}
-          visible={false}
         />
         <Column
-          dataField={'shortText'}
-          caption={'Text (S)'}
+          dataField={'uri'}
+          caption={'URL'}
           hidingPriority={8}
+          cellRender={(e) => {
+            if(e.data.uri === '#'){
+              return ''
+            }
+            return <a href={`${e.data.uri}`} target='_blank' rel='noreferrer'>Link</a>;
+          }}
         />
         <Column
           dataField={'statusName'}
@@ -183,13 +199,6 @@ const Forum = (props) => {
           allowEditing={false}
         />
         <Column
-          dataField={'firstName'}
-          caption={'Nickname'}
-          format={'dd MMMM yyy'}
-          hidingPriority={5}
-          allowEditing={false}
-        />
-        <Column
           dataField={'date'}
           caption={'Sent'}
           format={'dd MMM yyy HH:mm'}
@@ -201,4 +210,4 @@ const Forum = (props) => {
   )
 };
 
-export default Forum;
+export default ChatPage;

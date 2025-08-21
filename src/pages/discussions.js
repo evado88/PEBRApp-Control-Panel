@@ -10,6 +10,7 @@ import DataGrid, {
   FilterRow,
   LoadPanel,
   Editing,
+  ColumnChooser,
 } from 'devextreme-react/data-grid';
 
 import Assist from '../assist';
@@ -38,8 +39,7 @@ const Discussions = () => {
     async function loadData() {
 
       Assist.log("Starting to discussions from firestore");
-
-      // invalid url will trigger an 404 error
+      //invalid url will trigger an 404 error
 
       const db = getFirestore(app);
 
@@ -52,12 +52,17 @@ const Discussions = () => {
           id: doc.id,
           date: new Date(doc.data().posted.seconds * 1000),
           allPosts: `${doc.data().posts} Post(s)`,
+          posts: doc.data().posts,
           statusName: doc.data().status === 1 ? 'Active' : 'Disabled',
-          ...doc.data()
+          title: doc.data().title,
+          description: doc.data().description,
+          nickname: doc.data().nickname,
         }));
 
         setData(discussionsList);
         setLoading(false);
+
+    
 
       } else {
         // docSnap.data() will be undefined in this case
@@ -69,8 +74,8 @@ const Discussions = () => {
 
     loadData();
 
-     //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Forum', 'View', '').then((res) => {
+    //audit
+    Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Forum', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -113,6 +118,11 @@ const Discussions = () => {
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
+        <ColumnChooser
+          enabled={true}
+          mode='select'
+        >
+        </ColumnChooser>
         <Column
           dataField={'id'}
           caption={'ID'}
@@ -130,6 +140,7 @@ const Discussions = () => {
           dataField={'description'}
           caption={'Description'}
           hidingPriority={8}
+          visible={false}
         />
         <Column
           dataField={'statusName'}
@@ -156,6 +167,7 @@ const Discussions = () => {
           format={'dd MMM yyy HH:mm'}
           hidingPriority={5}
         />
+
       </DataGrid>
     </React.Fragment>
   )

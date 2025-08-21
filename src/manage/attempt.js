@@ -22,7 +22,7 @@ import DataGrid, {
   Editing,
 } from "devextreme-react/data-grid";
 
-const Resource = (props) => {
+const Attempt = (props) => {
   const history = useHistory();
 
   const [loading, setLoading] = useState(false);
@@ -87,8 +87,6 @@ const Resource = (props) => {
                 questions.forEach((item, index) => {
                   if (item.no === undefined) {
                     item.no = index + 1;
-                  }else{
-                    item.no = Number(item.no);
                   }
                 });
 
@@ -180,7 +178,6 @@ const Resource = (props) => {
             setStatus(response.data.items[0].r_status);
             setType(response.data.items[0].r_type);
             setContent(response.data.items[0].resource_content);
-            //check if user was adding and redirect
 
             Assist.showMessage(
               `The ${title.toLowerCase()} has been successfully saved!`,
@@ -225,19 +222,112 @@ const Resource = (props) => {
     console.log("updated", contentData);
   };
 
-
+  function uuidv4() {
+    return "10000000-1000-4000-8000-100000000000".replace(
+      /[018]/g,
+      (c) =>
+        (
+          +c ^
+          (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
+        ).toString(16) // eslint-disable-line
+    );
+  }
 
   const addQuestion = (e) => {
+    const item = {
+      id: uuidv4(),
+      no: e.data.no,
+      question: e.data.question,
+      answer: e.data.answer,
+    };
 
-    setContentData(contentData);
+    setContentData([...contentData, item]);
 
+    e.cancel = true;
+    console.log("added", contentData);
   };
   const imageUload = useMemo(() => {
-    return AppInfo.htmlimageUpload;
+    return {
+      tabs: ["url"],
+      fileUploadMode: "server",
+    };
   }, []);
 
   const toolbar = useMemo(() => {
-    return AppInfo.htmlToolbar;
+    return {
+      items: [
+        "undo",
+        "redo",
+        "separator",
+        "copy",
+        "cut",
+        "paste",
+        "separator",
+        {
+          name: "size",
+          acceptedValues: [
+            "8pt",
+            "10pt",
+            "12pt",
+            "14pt",
+            "18pt",
+            "24pt",
+            "36pt",
+          ],
+        },
+
+        {
+          name: "font",
+          acceptedValues: [
+            "Arial",
+            "Courier New",
+            "Georgia",
+            "Impact",
+            "Lucida Console",
+            "Tahoma",
+            "Times New Roman",
+            "Verdana",
+          ],
+        },
+        "separator",
+        "bold",
+        "italic",
+        "strike",
+        "underline",
+        "separator",
+        "alignLeft",
+        "alignCenter",
+        "alignRight",
+        "alignJustify",
+        "separator",
+        "orderedList",
+        "bulletList",
+        "separator",
+        {
+          name: "header",
+          acceptedValues: [false, 1, 2, 3, 4, 5],
+        },
+        "separator",
+        "color",
+        "background",
+        "separator",
+        "link",
+        "image",
+        "separator",
+        "clear",
+        "codeBlock",
+        "blockquote",
+        "separator",
+        "insertTable",
+        "deleteTable",
+        "insertRowAbove",
+        "insertRowBelow",
+        "deleteRow",
+        "insertColumnLeft",
+        "insertColumnRight",
+        "deleteColumn",
+      ],
+    };
   }, []);
 
   return (
@@ -433,7 +523,6 @@ const Resource = (props) => {
                     noDataText={"No questions added"}
                     showBorders={false}
                     focusedRowEnabled={true}
-                    allowColumnResizing={true}
                     defaultFocusedRowIndex={0}
                     columnAutoWidth={true}
                     columnHidingEnabled={true}
@@ -441,9 +530,9 @@ const Resource = (props) => {
                     onRowUpdating={updateQuestion}
                     onRowRemoving={removeQuestion}
                   >
-                    <Paging defaultPageSize={15} />
+                    <Paging defaultPageSize={5} />
                     <Editing
-                      mode="form"
+                      mode="row"
                       allowUpdating={true}
                       allowDeleting={true}
                       allowAdding={true}
@@ -475,7 +564,6 @@ const Resource = (props) => {
                       hidingPriority={6}
                       dataType="string"
                       width={150}
-                      
                     />
                   </DataGrid>
                 </div>
@@ -501,4 +589,4 @@ const Resource = (props) => {
   );
 };
 
-export default Resource;
+export default Attempt;

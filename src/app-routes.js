@@ -1,13 +1,61 @@
 import { withNavigationWatcher } from './contexts/navigation';
 
 import {
-  HomePage, UsersPage, UserPage, PeerNavigatorsPage, ProfilePage, AnalyticsPage, FollowupsPage, PatientsPage, FacilitiesPage, ResourcesPage,
+  HomePage, UsersPage, UserPage, PeerNavigatorsPage, ProfilePage, AnalyticsPage, FollowupsPage, PatientsPage, FacilitiesPage, PeerNavigatorFacilitiesPage, ResourcesPage,
   CountriesPage, ColorsPage, ColorPage, DiscussionsPage, FacilityPage, ResourcePage, CountryPage, DiscussionPage, ForumPage,
   PostPage, NotificationPage, NotificationsPage, PhonesPage, PhonePage,
-  PhoneParticipantsPage
+  PhoneParticipantsPage,
+  ConversationsPage, LastSeenPage, ChatPage, PhoneConversationsPage, FileManager,
+   Quizzes, QuizAttempts, QuizAttemptPage, QuizPage, 
+   SMSCategoriesPage, SMSPhonesPage, SMSMessagesPage, SMSHistoryPage,
+   SMSCategoryPage, SMSPhonePage, SMSMessagePage, SendSMSPage, DictionaryPage, StudyFollowupPage
 } from './pages';
 
 const routes = [
+  {
+    path: '/send-messages',
+    component: SendSMSPage
+  },
+  {
+    path: '/sms-categories',
+    component: SMSCategoriesPage
+  },
+  {
+    path: '/sms-category/edit/:eid',
+    component: SMSCategoryPage
+  },
+  {
+    path: '/sms-category/add',
+    component: SMSCategoryPage
+  },
+  {
+    path: '/sms-phones',
+    component: SMSPhonesPage
+  },
+  {
+    path: '/sms-phone/edit/:eid',
+    component: SMSPhonePage
+  },
+  {
+    path: '/sms-phone/add',
+    component: SMSPhonePage
+  },
+  {
+    path: '/sms-messages',
+    component: SMSMessagesPage
+  },
+  {
+    path: '/sms-message/edit/:eid',
+    component: SMSMessagePage
+  },
+  {
+    path: '/sms-message/add',
+    component: SMSMessagePage
+  },
+  {
+    path: '/sms-history',
+    component: SMSHistoryPage
+  },
   {
     path: '/users',
     component: UsersPage
@@ -34,12 +82,24 @@ const routes = [
     component: FollowupsPage
   },
   {
+    path: '/data-dictionary',
+    component: DictionaryPage
+  },
+  {
+    path: '/study-followup',
+    component: StudyFollowupPage
+  },
+  {
     path: '/profile',
     component: ProfilePage
   },
   {
     path: '/facilities',
     component: FacilitiesPage
+  },
+  {
+    path: '/peer-navigator-facilities',
+    component: PeerNavigatorFacilitiesPage
   },
   {
     path: '/resources',
@@ -56,6 +116,14 @@ const routes = [
   {
     path: '/discussions',
     component: DiscussionsPage
+  },
+  {
+    path: '/last-seen',
+    component: LastSeenPage
+  },
+  {
+    path: '/conversations',
+    component: ConversationsPage
   },
   {
     path: '/notifications',
@@ -86,12 +154,28 @@ const routes = [
     component: FacilityPage
   },
   {
+    path: '/pfacility/add',
+    component: FacilityPage
+  },
+  {
+    path: '/pfacility/edit/:eid',
+    component: FacilityPage
+  },
+  {
     path: '/phone/edit/:eid',
     component: PhonePage
   },
   {
     path: '/phone/participants/:eid',
     component: PhoneParticipantsPage
+  },
+  {
+    path: '/phone/conversations/:eid',
+    component: PhoneConversationsPage
+  },
+  {
+    path: '/phone/chat/:eid',
+    component: ChatPage
   },
   {
     path: '/resource/add',
@@ -132,8 +216,29 @@ const routes = [
     path: '/discussion/chat/:eid',
     component: ForumPage
   }, {
-    path: '/discussion/post/edit/:eid',
+    path: '/discussion/post/:fid/edit/:eid',
     component: PostPage
+  }, {
+    path: '/file-manager',
+    component: FileManager
+  }, {
+    path: '/quizzes',
+    component: Quizzes
+  }, {
+    path: '/quiz-attempts',
+    component: QuizAttempts
+  },
+  {
+    path: '/quiz/add',
+    component: QuizPage
+  },
+  {
+    path: '/quiz/edit/:eid',
+    component: QuizPage
+  },
+  {
+    path: '/quiz-attempt/edit/:eid',
+    component: QuizAttemptPage
   },
 ];
 

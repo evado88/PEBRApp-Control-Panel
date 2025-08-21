@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'devextreme/data/odata/store';
 import Toolbar, { Item } from 'devextreme-react/toolbar';
-import { useHistory } from "react-router-dom";
 
 import DataGrid, {
   Column,
@@ -13,20 +12,17 @@ import DataGrid, {
   Editing,
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
-
-const Resources = () => {
+const Dictionary = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState('Loading data...');
 
-  const history = useHistory();
-
   const pageConfig = {
-    currentUrl: 'resource/list',
-    deleteUrl: 'resource/delete',
-    single: 'Resource',
-    title: 'Resources',
+    currentUrl: 'data-dictionary/list',
+    deleteUrl: 'data-dictionary/delete',
+    single: 'dictionary',
+    title: 'Data Dictionary',
   }
 
 
@@ -56,7 +52,7 @@ const Resources = () => {
     fetchData();
 
      //audit
-     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Resources', 'View', '').then((res) => {
+     Assist.addAudit(window.sessionStorage.getItem("ruser"), 'Colors', 'View', '').then((res) => {
 
       Assist.log(res.Message, "info");
 
@@ -87,15 +83,6 @@ const Resources = () => {
     <React.Fragment>
       <h2 className={'content-block'}>{pageConfig.title}</h2>
       <Toolbar>
-        <Item location="before"
-          locateInMenu="auto"
-          widget="dxButton"
-          options={{
-            icon: 'plus',
-            onClick: () => {
-              history.push('/resource/add');
-            },
-          }} />
           <Item location="before"
           locateInMenu="auto"
           widget="dxButton"
@@ -107,7 +94,7 @@ const Resources = () => {
       <DataGrid
         className={'dx-card wide-card'}
         dataSource={data}
-        keyExpr={'resource_id'}
+        keyExpr={'dict_id'}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -127,7 +114,7 @@ const Resources = () => {
         <Editing
           mode="row"
           allowUpdating={false}
-          allowDeleting={true}
+          allowDeleting={false}
           allowAdding={false} />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
@@ -138,55 +125,39 @@ const Resources = () => {
         >
         </ColumnChooser>
         <Column
-          dataField={'resource_id'}
+          dataField={'dict_id'}
           caption={'ID'}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_name'}
+          dataField={'dict_entity'}
+          caption={'Entity'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'dict_field'}
+          caption={'Field'}
+          hidingPriority={8}
+        />
+        <Column
+          dataField={'dict_name'}
           caption={'Name'}
-          hidingPriority={8}
-          cellRender={(e) => {
-            return <a href={`#/resource/edit/${e.data.resource_id}`}>{e.data.resource_name}</a>;
-          }}
-        />
-       <Column
-          dataField={'r_type'}
-          caption={'Type'}
+          visible={true}
           hidingPriority={8}
         />
         <Column
-          dataField={'resource_description'}
+          dataField={'dict_description'}
           caption={'Description'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'resource_url'}
-          caption={'URL'}
-          hidingPriority={6}
-          visible={false}
-        />
-        <Column
-          dataField={'r_status'}
-          caption={'Status'}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={'resource_lastupdateuser'}
-          caption={'User'}
           hidingPriority={6}
         />
         <Column
-          dataField={'resource_createdate'}
-          caption={'Date'}
-          dataType={'date'}
-          format={'dd MMMM yyy'}
+          dataField={'dict_type'}
+          caption={'Type'}
           hidingPriority={5}
         />
-
       </DataGrid>
-    </React.Fragment>
+    </React.Fragment >
   )
 };
 
-export default Resources;
+export default Dictionary;

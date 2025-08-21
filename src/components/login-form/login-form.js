@@ -8,6 +8,7 @@ import Form, {
   RequiredRule,
   EmailRule
 } from 'devextreme-react/form';
+import { Link } from "react-router-dom";
 import LoadIndicator from 'devextreme-react/load-indicator';
 import notify from 'devextreme/ui/notify';
 import './login-form.scss';
@@ -96,6 +97,11 @@ function Login() {
             </span>
           </ButtonOptions>
         </ButtonItem>
+        <Item>
+          <div className={"login-link"}>
+          Looking for Apps? <Link to={"/download"}>Download TwySHE Apps</Link>
+          </div>
+        </Item>
       </Form>
     </form>
   );

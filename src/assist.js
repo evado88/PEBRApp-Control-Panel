@@ -34,6 +34,26 @@ class Assist {
         }
     }
 
+    static getTypeName(type = 1) {
+
+        if (type === 1) {
+
+            return 'Public';
+        }
+        else if (type === 2) {
+
+            return 'Peer Navigator';
+        }
+        else if (type === 3) {
+
+            return 'Participant';
+        }
+        else {
+            return 'Public';
+        }
+    }
+
+
     ///Logs a message to the console
     static log(message, type = 'log') {
 

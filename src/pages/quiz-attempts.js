@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "devextreme/data/odata/store";
 import Toolbar, { Item } from "devextreme-react/toolbar";
+
 import DataGrid, {
   Column,
   Pager,
@@ -11,16 +12,18 @@ import DataGrid, {
   Editing,
 } from "devextreme-react/data-grid";
 import Assist from "../assist.js";
-const Phones = () => {
+import AppInfo from "../app-info.js";
+
+const QuizAttempts = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingText, setLoadingText] = useState("Loading data...");
 
   const pageConfig = {
-    currentUrl: "phone/list",
-    deleteUrl: "phone/delete",
-    single: "phone",
-    title: "Phones",
+    currentUrl: "quiz-attempt/list",
+    deleteUrl: "quiz/delete",
+    single: "Quiz",
+    title: "Quiz Attempts",
   };
 
   useEffect(() => {
@@ -45,7 +48,12 @@ const Phones = () => {
     fetchData();
 
     //audit
-    Assist.addAudit(window.sessionStorage.getItem("ruser"), "Users", "View", "")
+    Assist.addAudit(
+      window.sessionStorage.getItem("ruser"),
+      "Resources",
+      "View",
+      ""
+    )
       .then((res) => {
         Assist.log(res.Message, "info");
       })
@@ -63,10 +71,11 @@ const Phones = () => {
         );
       })
       .catch((ex) => {
-        e.cancel = true;
         Assist.showMessage(ex.Message, "error");
+        e.cancel = true;
       });
   };
+
 
   return (
     <React.Fragment>
@@ -86,7 +95,7 @@ const Phones = () => {
       <DataGrid
         className={"dx-card wide-card"}
         dataSource={data}
-        keyExpr={"phone_id"}
+        keyExpr={"attempt_id"}
         noDataText={loadingText}
         showBorders={false}
         focusedRowEnabled={true}
@@ -96,109 +105,60 @@ const Phones = () => {
         onRowRemoving={deleteItem}
         onCellPrepared={(e) => {
           if (e.rowType === "data") {
-            if (e.column.dataField === "phone_color") {
-              e.cellElement.style.cssText = `color: white; background-color: ${e.data.phone_color}`;
+            if (e.column.dataField === "attempt_score") {
+              e.cellElement.style.cssText = `color: white; background-color: ${e.data.attempt_score >= AppInfo.quizPassMark ? 'green': 'red'}`;
             }
           }
         }}
       >
-        <Paging defaultPageSize={5} />
+        <Paging defaultPageSize={10} />
         <Editing
           mode="row"
           allowUpdating={false}
-          allowDeleting={false}
+          allowDeleting={true}
           allowAdding={false}
         />
         <Pager showPageSizeSelector={true} showInfo={true} />
         <FilterRow visible={true} />
         <LoadPanel enabled={loading} />
         <ColumnChooser enabled={true} mode="select"></ColumnChooser>
-        <Column dataField={"phone_id"} caption={"ID"} hidingPriority={8} />
+        <Column dataField={"attempt_id"} caption={"ID"} hidingPriority={8} />
         <Column
-          dataField={"phone_name"}
-          caption={"Name"}
+          dataField={"attempt_quiz"}
+          caption={"Quiz"}
           hidingPriority={8}
           cellRender={(e) => {
             return (
-              <a href={`#/phone/edit/${e.data.phone_number}`}>
-                {e.data.phone_name}
+              <a href={`#/quiz-attempt/edit/${e.data.attempt_id}`}>
+                {e.data.quiz_question}
               </a>
             );
           }}
         />
         <Column
-          dataField={"phone_number"}
-          caption={"Number"}
-          hidingPriority={8}
-          cellRender={(e) => {
-            if (e.data.phone_status === 2 || e.data.phone_status === 4) {
-              return (
-                <a href={`#/phone/participants/${e.data.phone_number}`}>
-                  {e.data.phone_number}
-                </a>
-              );
-            } else {
-              return e.data.phone_number;
-            }
-          }}
-        />
+          dataField={"attempt_score"}
+          caption={"Score %"}
+          hidingPriority={6}
+          dataType="numeric"
+          width={150}
+        >
+        </Column>
+        <Column dataField={"c_status"} caption={"Status"} hidingPriority={8} />
         <Column
-          dataField={"n_participants"}
-          caption={"Participants"}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={"phone_pin"}
-          caption={"PIN"}
-          hidingPriority={8}
-          visible={false}
-        />
-        <Column
-          dataField={"phone_color"}
-          caption={"Color"}
-          hidingPriority={8}
-        />
-
-        <Column dataField={"p_status"} caption={"Status"} hidingPriority={8} />
-        <Column
-          dataField={"phone_email"}
-          caption={"Email"}
+          dataField={"attempt_createuser"}
+          caption={"User"}
           hidingPriority={6}
         />
         <Column
-          dataField={"phone_createdate"}
-          caption={"Registered"}
+          dataField={"attempt_createdate"}
+          caption={"Date"}
           dataType={"date"}
           format={"dd MMMM yyy"}
           hidingPriority={5}
-        />
-        <Column
-          dataField={"p_source"}
-          caption={"Platform"}
-          hidingPriority={8}
-        />
-        <Column
-          dataField={"phone_lastupdatedate"}
-          caption={"Last Active"}
-          dataType={"date"}
-          format={"dd MMMM yyy"}
-          hidingPriority={5}
-        />
-        <Column
-          dataField={"phone_lastupdateuser"}
-          caption={"Last Update User"}
-          hidingPriority={6}
-          visible={false}
-        />
-        <Column
-          dataField={"phone_token"}
-          caption={"Token"}
-          hidingPriority={6}
-          visible={false}
         />
       </DataGrid>
     </React.Fragment>
   );
 };
 
-export default Phones;
+export default QuizAttempts;

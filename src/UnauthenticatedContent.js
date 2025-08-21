@@ -1,7 +1,8 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { SingleCard } from './layouts';
-import { LoginForm, ResetPasswordForm, ChangePasswordForm, CreateAccountForm } from './components';
+import { LoginForm, ResetPasswordForm, ChangePasswordForm, 
+  CreateAccountForm, DownloadForm } from './components';
 
 function UnauthenticatedContent () {
   return (
@@ -14,6 +15,11 @@ function UnauthenticatedContent () {
       <Route exact path='/create-account' >
         <SingleCard title="Sign Up">
           <CreateAccountForm />
+        </SingleCard>
+      </Route>
+       <Route exact path='/download' >
+        <SingleCard title="Download Apps">
+          <DownloadForm />
         </SingleCard>
       </Route>
       <Route exact path='/reset-password' >

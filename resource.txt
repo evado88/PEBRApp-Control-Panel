@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SelectBox from "devextreme-react/select-box";
 import { TextBox } from "devextreme-react/text-box";
@@ -8,7 +8,12 @@ import { LoadPanel } from "devextreme-react/load-panel";
 import { useHistory } from "react-router-dom";
 import Toolbar, { Item } from "devextreme-react/toolbar";
 import FileUploader from "devextreme-react/file-uploader";
-import HtmlEditor from "devextreme-react/html-editor";
+import HtmlEditor, {
+  Toolbar as HToolbar,
+  MediaResizing,
+  ImageUpload,
+  Item as HItem,
+} from "devextreme-react/html-editor";
 
 import { Validator, RequiredRule } from "devextreme-react/validator";
 
@@ -77,25 +82,9 @@ const Resource = (props) => {
               setContent(response.data.items[0].resource_content);
 
               if (response.data.items[0].r_type === "Interactive") {
-                let questions = JSON.parse(
-                  response.data.items[0].resource_content
+                setContentData(
+                  JSON.parse(response.data.items[0].resource_content)
                 );
-
-                console.log("list", questions);
-
-                //add a no counter
-                questions.forEach((item, index) => {
-                  if (item.no === undefined) {
-                    item.no = index + 1;
-                  }else{
-                    item.no = Number(item.no);
-                  }
-                });
-
-                const naturalCollator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
-                questions.sort((a, b) => naturalCollator.compare(a.no, b.no))
-
-                setContentData(questions);
               }
             } else {
               Assist.showMessage(response.data.message);
@@ -180,7 +169,22 @@ const Resource = (props) => {
             setStatus(response.data.items[0].r_status);
             setType(response.data.items[0].r_type);
             setContent(response.data.items[0].resource_content);
+
             //check if user was adding and redirect
+            if (id === 0) {
+              Assist.sendTopicMessage(`New resource has been posted`, name)
+                .then((res) => {
+                  Assist.log(res.Message, "info");
+                })
+                .catch((x) => {
+                  Assist.showMessage(x.Message, "error");
+                })
+                .finally(() => {
+                  history.push(
+                    `/resource/edit/${response.data.items[0].resource_id}`
+                  );
+                });
+            }
 
             Assist.showMessage(
               `The ${title.toLowerCase()} has been successfully saved!`,
@@ -211,34 +215,29 @@ const Resource = (props) => {
     console.log("removed", contentData);
   };
 
-  const updateQuestion = (e) => {
-    contentData.map((item, index) => {
-      if (item.id === e.key) {
-        contentData[index] = { ...contentData[index], ...e.newData };
-
-        setContentData(contentData);
-      }
-
-      return item;
-    });
-
-    console.log("updated", contentData);
-  };
-
-
+  function uuidv4() {
+    return "10000000-1000-4000-8000-100000000000".replace(
+      /[018]/g,
+      (c) =>
+        (
+          +c ^
+          (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
+        ).toString(16) // eslint-disable-line
+    );
+  }
 
   const addQuestion = (e) => {
+    const item = {
+      id: uuidv4(),
+      question: e.data.question,
+      answer: e.data.answer,
+    };
 
-    setContentData(contentData);
+    setContentData([...contentData, item]);
 
+    e.cancel = true;
+    console.log("added", contentData);
   };
-  const imageUload = useMemo(() => {
-    return AppInfo.htmlimageUpload;
-  }, []);
-
-  const toolbar = useMemo(() => {
-    return AppInfo.htmlToolbar;
-  }, []);
 
   return (
     <React.Fragment>
@@ -392,16 +391,92 @@ const Resource = (props) => {
               <div className="dx-field">
                 <div className="dx-field-label">Content</div>
                 <div className="dx-field-value">
-                  <HtmlEditor
-                    height="725px"
-                    defaultValue={content}
-                    value={content}
-                    onValueChanged={(e) => setContent(e.value)}
-                    disabled={error}
-                    toolbar={toolbar}
-                    imageUpload={imageUload}
-                    mediaResizing={{ enabled: true }}
-                  ></HtmlEditor>
+                  <HtmlEditor height="725px" defaultValue={content} value={content} onValueChanged={(e) => setContent(e.value)} disabled={error}>
+                    <MediaResizing enabled={true} />
+                    <ImageUpload tabs={{ name: "From the Web", value: ["url"] }} fileUploadMode="base64" />
+                    <HToolbar multiline={true}>
+                      <HItem name="undo" />
+                      <HItem name="redo" />
+                      <HItem name="separator" />
+                      <HItem
+                        name="size"
+                        acceptedValues={[
+                          "8pt",
+                          "10pt",
+                          "12pt",
+                          "14pt",
+                          "18pt",
+                          "24pt",
+                          "36pt",
+                        ]}
+                        options={{
+                          inputAttr: {
+                            "aria-label": "Font size",
+                          },
+                        }}
+                      />
+                      <HItem
+                        name="font"
+                        acceptedValues={[
+                          "Arial",
+                          "Courier New",
+                          "Georgia",
+                          "Impact",
+                          "Lucida Console",
+                          "Tahoma",
+                          "Times New Roman",
+                          "Verdana",
+                        ]}
+                        options={{
+                          inputAttr: {
+                            "aria-label": "Font family",
+                          },
+                        }}
+                      />
+                      <HItem name="separator" />
+                      <HItem name="bold" />
+                      <HItem name="italic" />
+                      <HItem name="strike" />
+                      <HItem name="underline" />
+                      <HItem name="separator" />
+                      <HItem name="alignLeft" />
+                      <HItem name="alignCenter" />
+                      <HItem name="alignRight" />
+                      <HItem name="alignJustify" />
+                      <HItem name="separator" />
+                      <HItem name="orderedList" />
+                      <HItem name="bulletList" />
+                      <HItem name="separator" />
+                      <HItem
+                        name="header"
+                        acceptedValues={[false, 1, 2, 3, 4, 5]}
+                        options={{
+                          inputAttr: {
+                            "aria-label": "Font family",
+                          },
+                        }}
+                      />
+                      <HItem name="separator" />
+                      <HItem name="color" />
+                      <HItem name="background" />
+                      <HItem name="separator" />
+                      <HItem name="link" />
+                      <HItem name="image" />
+                      <HItem name="separator" />
+                      <HItem name="clear" />
+                      <HItem name="codeBlock" />
+                      <HItem name="blockquote" />
+                      <HItem name="separator" />
+                      <HItem name="insertTable" />
+                      <HItem name="deleteTable" />
+                      <HItem name="insertRowAbove" />
+                      <HItem name="insertRowBelow" />
+                      <HItem name="deleteRow" />
+                      <HItem name="insertColumnLeft" />
+                      <HItem name="insertColumnRight" />
+                      <HItem name="deleteColumn" />
+                    </HToolbar>
+                  </HtmlEditor>
                 </div>
               </div>
             )}
@@ -433,18 +508,16 @@ const Resource = (props) => {
                     noDataText={"No questions added"}
                     showBorders={false}
                     focusedRowEnabled={true}
-                    allowColumnResizing={true}
                     defaultFocusedRowIndex={0}
                     columnAutoWidth={true}
                     columnHidingEnabled={true}
                     onRowInserting={addQuestion}
-                    onRowUpdating={updateQuestion}
                     onRowRemoving={removeQuestion}
                   >
-                    <Paging defaultPageSize={15} />
+                    <Paging defaultPageSize={5} />
                     <Editing
-                      mode="form"
-                      allowUpdating={true}
+                      mode="row"
+                      allowUpdating={false}
                       allowDeleting={true}
                       allowAdding={true}
                     />
@@ -458,24 +531,14 @@ const Resource = (props) => {
                       visible={false}
                     />
                     <Column
-                      dataField={"no"}
-                      caption={"No"}
-                      hidingPriority={8}
-                      dataType="number"
-                    />
-                    <Column
                       dataField={"question"}
                       caption={"Question"}
                       hidingPriority={8}
-                      dataType="string"
                     />
                     <Column
                       dataField={"answer"}
                       caption={"Answer"}
                       hidingPriority={6}
-                      dataType="string"
-                      width={150}
-                      
                     />
                   </DataGrid>
                 </div>

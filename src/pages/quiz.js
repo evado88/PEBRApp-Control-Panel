@@ -14,7 +14,7 @@ import DataGrid, {
 } from 'devextreme-react/data-grid';
 import Assist from '../assist.js';
 
-const Resources = () => {
+const Quiz = () => {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,10 +23,10 @@ const Resources = () => {
   const history = useHistory();
 
   const pageConfig = {
-    currentUrl: 'resource/list',
-    deleteUrl: 'resource/delete',
-    single: 'Resource',
-    title: 'Resources',
+    currentUrl: 'quiz/list',
+    deleteUrl: 'quiz/delete',
+    single: 'Quiz',
+    title: 'Quizzes',
   }
 
 
@@ -189,4 +189,4 @@ const Resources = () => {
   )
 };
 
-export default Resources;
+export default Quiz;
